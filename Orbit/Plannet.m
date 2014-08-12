@@ -50,16 +50,6 @@
     //_plannetBody.color = [SKColor redColor];
     //_plannetBody.colorBlendFactor = 1.0;
 
-//physics body properties
-    //CGPathRef physBodPath = [ UIBezierPath bezierPathWithOvalInRect: CGRectMake( _plannetBody.position.x -_plannetBody.size.width/2, _plannetBody.position.y - _plannetBody.size.height/2, _plannetBody.size.width, _plannetBody.size.height ) ].CGPath;
-    //_plannetBody.physicsBody = [ SKPhysicsBody bodyWithEdgeLoopFromPath: physBodPath ];
-    _plannetBody.physicsBody = [SKPhysicsBody bodyWithCircleOfRadius:_plannetBody.size.width/2];
-    _plannetBody.physicsBody.linearDamping = 0;
-    _plannetBody.physicsBody.angularDamping = 0;
-    _plannetBody.physicsBody.allowsRotation = NO;
-    _plannetBody.physicsBody.categoryBitMask = CNPhysicsCategoryPlannetBody;
-    _plannetBody.physicsBody.contactTestBitMask = CNPhysicsCategoryShip;
-    _plannetBody.physicsBody.collisionBitMask = 0;
     
 //add to parrent
     [self addChild:_plannetBody];
@@ -85,7 +75,7 @@
 -(void) addGravZone
 {
 //node properties
-    _gravZone = [SKSpriteNode spriteNodeWithColor:[UIColor colorWithWhite: 1 alpha:0] size:CGSizeMake(_size.width*1.6, _size.height*1.6)];
+    _gravZone = [SKSpriteNode spriteNodeWithColor:[UIColor colorWithWhite: 1 alpha:0] size:CGSizeMake(_size.width*1.65, _size.height*1.65)];
     _gravZone.alpha = 0.0;
     
 //gravity path
