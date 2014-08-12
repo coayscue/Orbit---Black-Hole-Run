@@ -12,7 +12,4 @@
 
 -(void)scaleIn;
 -(void)scaleOut;
-
-
-ASFCSEW
 @end
