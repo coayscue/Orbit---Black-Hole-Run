@@ -20,6 +20,8 @@
 @property CGPoint _lastOrbitPosition;
 @property BOOL _clockwise;
 @property BOOL _onPlannet;
+@property BOOL _dead;
+
 -(instancetype) initWithPosition:(CGPoint) position andColor:(SKColor *) color;
 
 @end
