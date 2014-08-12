@@ -38,7 +38,6 @@ static const int NORMAL_SHIP_SPEED_PPS = 80;
     SKLabelNode *_highScoreLabel;
     SKLabelNode *_lastScoreLabel;
     BOOL _gameStarted;
-    CGFloat _acceleration;
     CGFloat _distance;
     
 }
@@ -80,7 +79,7 @@ static const int NORMAL_SHIP_SPEED_PPS = 80;
         
         
         //setting up instance variables
-        _acceleration = 10;
+        _mainShip.zRotation = M_PI_2;
         
         
         //adding children to parent nodes
@@ -92,7 +91,6 @@ static const int NORMAL_SHIP_SPEED_PPS = 80;
 //        [_background addChild:_redShip];
 //        [_background addChild:_blueShip];
         
-        [_background scaleIn];
         [self addChild:_background];
         [self addChild:_orbitLabel];
         [self addChild:_highScoreLabel];
@@ -317,76 +315,83 @@ static const int NORMAL_SHIP_SPEED_PPS = 80;
             //sets the clockwise property depending on which side of the plannet the ship hit with respect to where it last left orbit
             if(accuracyAngle >= 0){ _mainShip._clockwise = NO; } else { _mainShip._clockwise = YES; }
             
-            CGPoint newPosition;
+            if (accuracyAngle > -10 && accuracyAngle < 10){
+                _mainShip._dead = YES;
+                [self killShip:_mainShip];
+            }
             
-            //sets the curved path that the ship will take to go to the start of the orbit path
-            if(_mainShip._clockwise){
-                UIBezierPath *entrancePath = [UIBezierPath bezierPath];
-                [entrancePath moveToPoint:_mainShip.position];
-                CGFloat newAngle = _mainShip._plannetToShipAngle - (0.4 * NORMAL_SHIP_SPEED_PPS * _mainShip.speed)/ (_mainShip._currentPlannet._radius * 1.3);
-                newPosition = CGPointMake(_mainShip._currentPlannet.position.x + cos(newAngle)*_mainShip._currentPlannet._radius*1.3, _mainShip._currentPlannet.position.y + sin(newAngle)*_mainShip._currentPlannet._radius*1.3);
-                //makes a curve that goes from ship position to the desired position
-                [entrancePath
-                 addQuadCurveToPoint: newPosition
-                 controlPoint:CGPointAdd(_mainShip.position, CGPointMake(_mainShip._currentPlannet._radius*0.3*cos(_mainShip.zRotation), _mainShip._currentPlannet._radius*0.3*sin(_mainShip.zRotation)))];
-                _mainShip._currentPlannet._entrancePath = entrancePath;
-            }else{
-                UIBezierPath *entrancePath = [UIBezierPath bezierPath];
-                [entrancePath moveToPoint:_mainShip.position];
-                CGFloat newAngle = _mainShip._plannetToShipAngle + ((0.4 * NORMAL_SHIP_SPEED_PPS * _mainShip.speed) / (_mainShip._currentPlannet._radius * 1.3));
-                newPosition = CGPointMake(_mainShip._currentPlannet.position.x + cos(newAngle)*_mainShip._currentPlannet._radius*1.3, _mainShip._currentPlannet.position.y + sin(newAngle)*_mainShip._currentPlannet._radius*1.3);
-                //makes a curve that goes from ship position to the desired position
-                [entrancePath
-                 addQuadCurveToPoint: newPosition
-                 controlPoint:CGPointAdd(_mainShip.position, CGPointMake(_mainShip._currentPlannet._radius*0.3*cos(_mainShip.zRotation), _mainShip._currentPlannet._radius*0.3*sin(_mainShip.zRotation)))];
-                _mainShip._currentPlannet._entrancePath = entrancePath;
+            if(!_mainShip._dead){
+                
+                CGPoint newPosition;
+                
+                //sets the curved path that the ship will take to go to the start of the orbit path
+                if(_mainShip._clockwise){
+                    UIBezierPath *entrancePath = [UIBezierPath bezierPath];
+                    [entrancePath moveToPoint:_mainShip.position];
+                    CGFloat newAngle = _mainShip._plannetToShipAngle - (0.4 * NORMAL_SHIP_SPEED_PPS * _mainShip.speed)/ (_mainShip._currentPlannet._radius * 1.25);
+                    newPosition = CGPointMake(_mainShip._currentPlannet.position.x + cos(newAngle)*_mainShip._currentPlannet._radius*1.25, _mainShip._currentPlannet.position.y + sin(newAngle)*_mainShip._currentPlannet._radius*1.25);
+                    //makes a curve that goes from ship position to the desired position
+                    [entrancePath
+                     addQuadCurveToPoint: newPosition
+                     controlPoint:CGPointAdd(_mainShip.position, CGPointMake(_mainShip._currentPlannet._radius*0.4*cos(_mainShip.zRotation), _mainShip._currentPlannet._radius*0.4*sin(_mainShip.zRotation)))];
+                    _mainShip._currentPlannet._entrancePath = entrancePath;
+                }else{
+                    UIBezierPath *entrancePath = [UIBezierPath bezierPath];
+                    [entrancePath moveToPoint:_mainShip.position];
+                    CGFloat newAngle = _mainShip._plannetToShipAngle + ((0.4 * NORMAL_SHIP_SPEED_PPS * _mainShip.speed) / (_mainShip._currentPlannet._radius * 1.25));
+                    newPosition = CGPointMake(_mainShip._currentPlannet.position.x + cos(newAngle)*_mainShip._currentPlannet._radius*1.25, _mainShip._currentPlannet.position.y + sin(newAngle)*_mainShip._currentPlannet._radius*1.25);
+                    //makes a curve that goes from ship position to the desired position
+                    [entrancePath
+                     addQuadCurveToPoint: newPosition
+                     controlPoint:CGPointAdd(_mainShip.position, CGPointMake(_mainShip._currentPlannet._radius*0.4*cos(_mainShip.zRotation), _mainShip._currentPlannet._radius*0.4*sin(_mainShip.zRotation)))];
+                    _mainShip._currentPlannet._entrancePath = entrancePath;
+                    
+                }
+                
+                //sets the path that the ship will follow, starting and ending with its current position
+                //issue with clockwise - seems flipped for some reason here
+                
+                
+                CGFloat theNewAngle;
+                
+                if(_mainShip._clockwise){
+                    theNewAngle = CGPointToAngle(CGPointSubtract(newPosition, _mainShip._currentPlannet.position));
+                    _mainShip._currentPlannet._gravPath = [UIBezierPath bezierPathWithArcCenter: _mainShip._currentPlannet.position radius: _mainShip._currentPlannet._radius * 1.25 startAngle:theNewAngle endAngle: theNewAngle - (2*M_PI - 0.0001) clockwise: !_mainShip._clockwise];
+                    theNewAngle -= M_PI_2;
+                }else{
+                    theNewAngle = CGPointToAngle(CGPointSubtract(newPosition, _mainShip._currentPlannet.position));
+                    _mainShip._currentPlannet._gravPath = [UIBezierPath bezierPathWithArcCenter: _mainShip._currentPlannet.position radius: _mainShip._currentPlannet._radius * 1.25 startAngle:theNewAngle endAngle: theNewAngle + (2*M_PI - 0.0001) clockwise: !_mainShip._clockwise];
+                    theNewAngle += M_PI_2;
+                }
+                
+                
+                SKAction *followPath = [SKAction repeatActionForever: [SKAction followPath: _mainShip._currentPlannet._gravPath.CGPath asOffset: NO orientToPath: NO duration:((2*M_PI) *_mainShip._currentPlannet._radius * 1.25 ) / NORMAL_SHIP_SPEED_PPS]];
+                
+                //runs the actions that enter the ship into orbit, set _onPlannet to true, and run laps around the plannet
+                [_mainShip runAction: [SKAction sequence:@[[SKAction group:@[[SKAction rotateToAngle:theNewAngle duration:0.3 shortestUnitArc:YES], [SKAction followPath:_mainShip._currentPlannet._entrancePath.CGPath asOffset:NO orientToPath:NO duration:0.4]]], [SKAction runBlock:^{ _mainShip._onPlannet = YES; }], followPath]]];
                 
             }
-            
-            //sets the path that the ship will follow, starting and ending with its current position
-            //issue with clockwise - seems flipped for some reason here
-            
-            
-            CGFloat theNewAngle;
-            
-            if(_mainShip._clockwise){
-                theNewAngle = CGPointToAngle(CGPointSubtract(newPosition, _mainShip._currentPlannet.position));
-                _mainShip._currentPlannet._gravPath = [UIBezierPath bezierPathWithArcCenter: _mainShip._currentPlannet.position radius: _mainShip._currentPlannet._radius * 1.3 startAngle:theNewAngle endAngle: theNewAngle - (2*M_PI - 0.0001) clockwise: !_mainShip._clockwise];
-                theNewAngle -= M_PI_2;
-            }else{
-                theNewAngle = CGPointToAngle(CGPointSubtract(newPosition, _mainShip._currentPlannet.position));
-                _mainShip._currentPlannet._gravPath = [UIBezierPath bezierPathWithArcCenter: _mainShip._currentPlannet.position radius: _mainShip._currentPlannet._radius * 1.3 startAngle:theNewAngle endAngle: theNewAngle + (2*M_PI - 0.0001) clockwise: !_mainShip._clockwise];
-                theNewAngle += M_PI_2;
-            }
-            
-            
-            SKAction *followPath = [SKAction repeatActionForever: [SKAction followPath: _mainShip._currentPlannet._gravPath.CGPath asOffset: NO orientToPath: NO duration:((2*M_PI) *_mainShip._currentPlannet._radius * 1.3 ) / NORMAL_SHIP_SPEED_PPS]];
-            
-            //runs the actions that enter the ship into orbit, set _onPlannet to true, and run laps around the plannet
-            [_mainShip runAction: [SKAction sequence:@[[SKAction group:@[[SKAction rotateToAngle:theNewAngle duration:0.3 shortestUnitArc:YES], [SKAction followPath:_mainShip._currentPlannet._entrancePath.CGPath asOffset:NO orientToPath:NO duration:0.4]]], [SKAction runBlock:^{ _mainShip._onPlannet = YES; }], followPath]]];
-            
-            
             
             if ( accuracyAngle > 4){
                 
                 accuracyAngle = abs(accuracyAngle);
                 
                 if(accuracyAngle <= 100 && accuracyAngle > 30){
-                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 1.3 duration:0.3]];
+                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 1.3 duration:0.2]];
                 }else if(accuracyAngle <= 30 && accuracyAngle > 20){
                     //no change in speed
                 }else if(accuracyAngle <= 20 && accuracyAngle > 15){
-                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 0.9 duration:0.3]];
+                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 0.9 duration:0.2]];
                 }else if(accuracyAngle <= 15 && accuracyAngle > 12){
-                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 0.75 duration:0.3]];
+                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 0.75 duration:0.2]];
                 }else if(accuracyAngle <= 12 && accuracyAngle > 10){
-                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 0.6 duration:0.3]];
+                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 0.6 duration:0.2]];
                 }else if(accuracyAngle <= 10 && accuracyAngle > 8){
-                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 0.5 duration:0.3]];
+                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 0.5 duration:0.2]];
                 }else if(accuracyAngle <= 8 && accuracyAngle > 6){
-                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 0.4 duration:0.3]];
+                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 0.4 duration:0.2]];
                 }else if(accuracyAngle <= 6 && accuracyAngle > 4){
-                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 0.25 duration:0.3]];
+                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 0.25 duration:0.2]];
                 }
                 
             }else if(accuracyAngle < -4){
@@ -394,38 +399,71 @@ static const int NORMAL_SHIP_SPEED_PPS = 80;
                 accuracyAngle = abs(accuracyAngle);
                 
                 if(accuracyAngle <= 100 && accuracyAngle > 30){
-                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 1.3 duration:0.3]];
+                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 1.3 duration:0.2]];
                 }else if(accuracyAngle <= 30 && accuracyAngle > 20){
                     //no change in speed
                 }else if(accuracyAngle <= 20 && accuracyAngle > 15){
-                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 0.9 duration:0.3]];
+                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 0.9 duration:0.2]];
                 }else if(accuracyAngle <= 15 && accuracyAngle > 12){
-                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 0.75 duration:0.3]];
+                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 0.75 duration:0.2]];
                 }else if(accuracyAngle <= 12 && accuracyAngle > 10){
-                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 0.6 duration:0.3]];
+                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 0.6 duration:0.2]];
                 }else if(accuracyAngle <= 10 && accuracyAngle > 8){
-                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 0.5 duration:0.3]];
+                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 0.5 duration:0.2]];
                 }else if(accuracyAngle <= 8 && accuracyAngle > 6){
-                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 0.4 duration:0.3]];
+                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 0.4 duration:0.2]];
                 }else if(accuracyAngle <= 6 && accuracyAngle > 4){
-                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 0.25 duration:0.3]];
+                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 0.25 duration:0.2]];
                 }
                 
-            }else if(accuracyAngle > -4 && accuracyAngle < 4){ NSLog(@"ship dead");}
+            }
 
         }
         
     }
     
-    if(collision ==(CNPhysicsCategoryShip | CNPhysicsCategoryPlannetBody)){
-        [self explodeShip];
-    }
     
 }
 
--(void) explodeShip
+-(void) killShip:(Ship *)ship
 {
+    CGPoint deathPoint = CGPointAdd(ship._currentPlannet.position, CGPointMultiplyScalar(CGPointMake(cos(ship._plannetToShipAngle), sin(ship._plannetToShipAngle)), ship._currentPlannet._radius*1.1));
+    CGPoint particleEmitterPosition = CGPointAdd(ship._currentPlannet.position, CGPointMultiplyScalar(CGPointMake(cos(ship._plannetToShipAngle), sin(ship._plannetToShipAngle)), ship._currentPlannet._radius));
     
+    SKAction *flyToDeath = [SKAction moveTo:deathPoint duration:(ship._currentPlannet._radius*0.5)/NORMAL_SHIP_SPEED_PPS];
+    
+    [ship runAction: flyToDeath completion:^{
+        
+        [ship removeFromParent];
+        
+        //sets up the explosion effect
+        SKEmitterNode *fireEmitter = [NSKeyedUnarchiver unarchiveObjectWithFile:[[NSBundle mainBundle] pathForResource:@"Fire" ofType:@"sks"]];
+        SKEmitterNode *explosionEmitter = [NSKeyedUnarchiver unarchiveObjectWithFile:[[NSBundle mainBundle] pathForResource:@"Explosion" ofType:@"sks"]];
+        
+        [_background addChild:explosionEmitter];
+        explosionEmitter.position = particleEmitterPosition;
+        [explosionEmitter runAction:[SKAction sequence:@[[SKAction waitForDuration:2],[SKAction removeFromParent]]]];
+        
+        [ship._currentPlannet addChild:fireEmitter];
+        fireEmitter.position = [_background convertPoint:particleEmitterPosition toNode:ship._currentPlannet];
+        [fireEmitter setScale: 0];
+        fireEmitter.emissionAngle = ship._plannetToShipAngle;
+        
+        [fireEmitter runAction:[SKAction sequence:@[[SKAction scaleTo:1 duration:0.5],[SKAction scaleTo:0 duration:2],[SKAction removeFromParent]]]];
+        
+        SKAction *screenShake1 = [SKAction moveBy:CGVectorMake(10*cos(ship._plannetToShipAngle + M_PI_2), 10*sin(ship._plannetToShipAngle + M_PI_2)) duration:0.025];
+        SKAction *screenShake2 = [screenShake1 reversedAction];
+        SKAction *sequence = [SKAction sequence:@[screenShake1, screenShake2, screenShake2,screenShake1]];
+        
+        //lighter shake
+        SKAction *finalShake1 = [SKAction moveBy:CGVectorMake(5*cos(ship._plannetToShipAngle + M_PI_2), 5*sin(ship._plannetToShipAngle + M_PI_2)) duration:0.025];
+        SKAction *finalShake2 = [finalShake1 reversedAction];
+        SKAction *sequence2 = [SKAction sequence:@[finalShake1, finalShake2, finalShake2, finalShake1]];
+                                                   
+        SKAction *fullShake = [SKAction sequence:@[sequence,sequence,sequence,sequence,sequence,sequence2,sequence2]];
+        fullShake.timingMode = SKActionTimingEaseOut;
+        [_background runAction: fullShake];
+    }];
 }
 
 
