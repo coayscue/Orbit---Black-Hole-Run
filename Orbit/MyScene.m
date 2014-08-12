@@ -14,7 +14,7 @@
 #import "Ship.h"
 #import "SKTUtils.h"
 
-static const int NORMAL_SHIP_SPEED_PPS = 100;
+static const int NORMAL_SHIP_SPEED_PPS = 80;
 
 @interface MyScene()<SKPhysicsContactDelegate>
 @end
@@ -238,7 +238,7 @@ static const int NORMAL_SHIP_SPEED_PPS = 100;
 //            SKAction *followPath = [SKAction repeatActionForever: [SKAction followPath: _mainShip._currentPlannet._gravPath.CGPath asOffset: NO orientToPath: NO duration:((2*M_PI) *_mainShip._currentPlannet._radius * 1.3 ) / NORMAL_SHIP_SPEED_PPS]];
 //            
 //            //runs the actions that enter the ship into orbit, set _onPlannet to true, and run laps around the plannet
-//            [_mainShip runAction: [SKAction sequence:@[[SKAction group:@[[SKAction rotateToAngle:theNewAngle duration:0.3 shortestUnitArc:YES], [SKAction followPath:_mainShip._currentPlannet._entrancePath.CGPath asOffset:NO orientToPath:NO duration:0.3]]], [SKAction runBlock:^{ _mainShip._onPlannet = YES; }], followPath]]];
+//            [_mainShip runAction: [SKAction sequence:@[[SKAction group:@[[SKAction rotateToAngle:theNewAngle duration:0.3 shortestUnitArc:YES], [SKAction followPath:_mainShip._currentPlannet._entrancePath.CGPath asOffset:NO orientToPath:NO duration:0.4]]], [SKAction runBlock:^{ _mainShip._onPlannet = YES; }], followPath]]];
 //            
 //            
 //            
@@ -323,7 +323,7 @@ static const int NORMAL_SHIP_SPEED_PPS = 100;
             if(_mainShip._clockwise){
                 UIBezierPath *entrancePath = [UIBezierPath bezierPath];
                 [entrancePath moveToPoint:_mainShip.position];
-                CGFloat newAngle = _mainShip._plannetToShipAngle - (0.3 * NORMAL_SHIP_SPEED_PPS * _mainShip.speed)/ (_mainShip._currentPlannet._radius * 1.3);
+                CGFloat newAngle = _mainShip._plannetToShipAngle - (0.4 * NORMAL_SHIP_SPEED_PPS * _mainShip.speed)/ (_mainShip._currentPlannet._radius * 1.3);
                 newPosition = CGPointMake(_mainShip._currentPlannet.position.x + cos(newAngle)*_mainShip._currentPlannet._radius*1.3, _mainShip._currentPlannet.position.y + sin(newAngle)*_mainShip._currentPlannet._radius*1.3);
                 //makes a curve that goes from ship position to the desired position
                 [entrancePath
@@ -333,7 +333,7 @@ static const int NORMAL_SHIP_SPEED_PPS = 100;
             }else{
                 UIBezierPath *entrancePath = [UIBezierPath bezierPath];
                 [entrancePath moveToPoint:_mainShip.position];
-                CGFloat newAngle = _mainShip._plannetToShipAngle + ((0.3 * NORMAL_SHIP_SPEED_PPS * _mainShip.speed) / (_mainShip._currentPlannet._radius * 1.3));
+                CGFloat newAngle = _mainShip._plannetToShipAngle + ((0.4 * NORMAL_SHIP_SPEED_PPS * _mainShip.speed) / (_mainShip._currentPlannet._radius * 1.3));
                 newPosition = CGPointMake(_mainShip._currentPlannet.position.x + cos(newAngle)*_mainShip._currentPlannet._radius*1.3, _mainShip._currentPlannet.position.y + sin(newAngle)*_mainShip._currentPlannet._radius*1.3);
                 //makes a curve that goes from ship position to the desired position
                 [entrancePath
@@ -351,11 +351,11 @@ static const int NORMAL_SHIP_SPEED_PPS = 100;
             
             if(_mainShip._clockwise){
                 theNewAngle = CGPointToAngle(CGPointSubtract(newPosition, _mainShip._currentPlannet.position));
-                _mainShip._currentPlannet._gravPath = [UIBezierPath bezierPathWithArcCenter: _mainShip._currentPlannet.position radius: _mainShip._currentPlannet._radius * 1.3 startAngle:theNewAngle endAngle: theNewAngle - 2*M_PI + 0.0001 clockwise: !_mainShip._clockwise];
+                _mainShip._currentPlannet._gravPath = [UIBezierPath bezierPathWithArcCenter: _mainShip._currentPlannet.position radius: _mainShip._currentPlannet._radius * 1.3 startAngle:theNewAngle endAngle: theNewAngle - (2*M_PI - 0.0001) clockwise: !_mainShip._clockwise];
                 theNewAngle -= M_PI_2;
             }else{
                 theNewAngle = CGPointToAngle(CGPointSubtract(newPosition, _mainShip._currentPlannet.position));
-                _mainShip._currentPlannet._gravPath = [UIBezierPath bezierPathWithArcCenter: _mainShip._currentPlannet.position radius: _mainShip._currentPlannet._radius * 1.3 startAngle:theNewAngle endAngle: theNewAngle + 2*M_PI - 0.0001 clockwise: !_mainShip._clockwise];
+                _mainShip._currentPlannet._gravPath = [UIBezierPath bezierPathWithArcCenter: _mainShip._currentPlannet.position radius: _mainShip._currentPlannet._radius * 1.3 startAngle:theNewAngle endAngle: theNewAngle + (2*M_PI - 0.0001) clockwise: !_mainShip._clockwise];
                 theNewAngle += M_PI_2;
             }
             
