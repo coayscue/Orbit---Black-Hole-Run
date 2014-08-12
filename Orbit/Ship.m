@@ -21,6 +21,7 @@
 @synthesize _clockwise;
 @synthesize _onPlannet;
 @synthesize _lastOrbitPosition;
+@synthesize _dead;
 
 -(instancetype) initWithPosition:(CGPoint)position andColor:(SKColor *)color
 {
