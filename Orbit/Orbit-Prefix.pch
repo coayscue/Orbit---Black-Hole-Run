@@ -14,3 +14,9 @@
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
 #endif
+
+typedef NS_OPTIONS(uint32_t, CNPhysicsCategory){
+    CNPhysicsCategoryShip = 1 << 0,
+    CNPhysicsCategoryPlannetBody = 1 << 1,
+    CNPhysicsCategoryGravityZone = 1 << 2,
+};

@@ -18,13 +18,28 @@
 		CAA8133E19955705008850FA /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CAA8133C19955705008850FA /* Main_iPad.storyboard */; };
 		CAA8134119955705008850FA /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CAA8134019955705008850FA /* ViewController.m */; };
 		CAA8134419955705008850FA /* MyScene.m in Sources */ = {isa = PBXBuildFile; fileRef = CAA8134319955705008850FA /* MyScene.m */; };
-		CAA8134619955705008850FA /* Spaceship.png in Resources */ = {isa = PBXBuildFile; fileRef = CAA8134519955705008850FA /* Spaceship.png */; };
 		CAA8134819955705008850FA /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CAA8134719955705008850FA /* Images.xcassets */; };
 		CAA8134F19955705008850FA /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CAA8134E19955705008850FA /* XCTest.framework */; };
 		CAA8135019955705008850FA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CAA8132519955705008850FA /* Foundation.framework */; };
 		CAA8135119955705008850FA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CAA8132919955705008850FA /* UIKit.framework */; };
 		CAA8135919955705008850FA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CAA8135719955705008850FA /* InfoPlist.strings */; };
 		CAA8135B19955705008850FA /* OrbitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CAA8135A19955705008850FA /* OrbitTests.m */; };
+		CAA8136E199559AD008850FA /* Background.m in Sources */ = {isa = PBXBuildFile; fileRef = CAA8136D199559AD008850FA /* Background.m */; };
+		CAA81370199559BB008850FA /* background.jpg in Resources */ = {isa = PBXBuildFile; fileRef = CAA8136F199559BB008850FA /* background.jpg */; };
+		CAA8137419955AFB008850FA /* Plannet.m in Sources */ = {isa = PBXBuildFile; fileRef = CAA8137319955AFB008850FA /* Plannet.m */; };
+		CAA8138619957991008850FA /* plannet.png in Resources */ = {isa = PBXBuildFile; fileRef = CAA8138519957991008850FA /* plannet.png */; };
+		CAA8139019958A65008850FA /* SKTEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = CAA8138D19958A65008850FA /* SKTEffects.m */; };
+		CAA8139119958A65008850FA /* SKTTimingFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = CAA8138F19958A65008850FA /* SKTTimingFunctions.m */; };
+		CAA8139D19958ED1008850FA /* SKAction+SKTExtras.m in Sources */ = {isa = PBXBuildFile; fileRef = CAA8139419958ED1008850FA /* SKAction+SKTExtras.m */; };
+		CAA8139E19958ED1008850FA /* SKEmitterNode+SKTExtras.m in Sources */ = {isa = PBXBuildFile; fileRef = CAA8139619958ED1008850FA /* SKEmitterNode+SKTExtras.m */; };
+		CAA8139F19958ED1008850FA /* SKNode+SKTExtras.m in Sources */ = {isa = PBXBuildFile; fileRef = CAA8139819958ED1008850FA /* SKNode+SKTExtras.m */; };
+		CAA813A019958ED1008850FA /* SKTAudio.m in Sources */ = {isa = PBXBuildFile; fileRef = CAA8139A19958ED1008850FA /* SKTAudio.m */; };
+		CAA813A119958ED1008850FA /* SKTUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = CAA8139C19958ED1008850FA /* SKTUtils.mm */; };
+		CAA813A319959A2F008850FA /* Earth.png in Resources */ = {isa = PBXBuildFile; fileRef = CAA813A219959A2F008850FA /* Earth.png */; };
+		CAA813A519959C04008850FA /* rocketship.png in Resources */ = {isa = PBXBuildFile; fileRef = CAA813A419959C04008850FA /* rocketship.png */; };
+		CAA813A819959C40008850FA /* Ship.m in Sources */ = {isa = PBXBuildFile; fileRef = CAA813A719959C40008850FA /* Ship.m */; };
+		CAA813AC1996B448008850FA /* Earth Kid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CAA813AB1996B448008850FA /* Earth Kid.ttf */; };
+		CAA813B019998E24008850FA /* gravzone.png in Resources */ = {isa = PBXBuildFile; fileRef = CAA813AF19998E24008850FA /* gravzone.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,13 +70,38 @@
 		CAA8134019955705008850FA /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		CAA8134219955705008850FA /* MyScene.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyScene.h; sourceTree = "<group>"; };
 		CAA8134319955705008850FA /* MyScene.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyScene.m; sourceTree = "<group>"; };
-		CAA8134519955705008850FA /* Spaceship.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Spaceship.png; sourceTree = "<group>"; };
 		CAA8134719955705008850FA /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		CAA8134D19955705008850FA /* OrbitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OrbitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CAA8134E19955705008850FA /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		CAA8135619955705008850FA /* OrbitTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "OrbitTests-Info.plist"; sourceTree = "<group>"; };
 		CAA8135819955705008850FA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		CAA8135A19955705008850FA /* OrbitTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OrbitTests.m; sourceTree = "<group>"; };
+		CAA8136C199559AD008850FA /* Background.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Background.h; sourceTree = "<group>"; };
+		CAA8136D199559AD008850FA /* Background.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Background.m; sourceTree = "<group>"; };
+		CAA8136F199559BB008850FA /* background.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = background.jpg; sourceTree = "<group>"; };
+		CAA8137219955AFB008850FA /* Plannet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Plannet.h; sourceTree = "<group>"; };
+		CAA8137319955AFB008850FA /* Plannet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Plannet.m; sourceTree = "<group>"; };
+		CAA8138519957991008850FA /* plannet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = plannet.png; sourceTree = "<group>"; };
+		CAA8138C19958A65008850FA /* SKTEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SKTEffects.h; path = "../Extra Source Code/SKTEffects.h"; sourceTree = "<group>"; };
+		CAA8138D19958A65008850FA /* SKTEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SKTEffects.m; path = "../Extra Source Code/SKTEffects.m"; sourceTree = "<group>"; };
+		CAA8138E19958A65008850FA /* SKTTimingFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SKTTimingFunctions.h; path = "../Extra Source Code/SKTTimingFunctions.h"; sourceTree = "<group>"; };
+		CAA8138F19958A65008850FA /* SKTTimingFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SKTTimingFunctions.m; path = "../Extra Source Code/SKTTimingFunctions.m"; sourceTree = "<group>"; };
+		CAA8139319958ED1008850FA /* SKAction+SKTExtras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SKAction+SKTExtras.h"; sourceTree = "<group>"; };
+		CAA8139419958ED1008850FA /* SKAction+SKTExtras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SKAction+SKTExtras.m"; sourceTree = "<group>"; };
+		CAA8139519958ED1008850FA /* SKEmitterNode+SKTExtras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SKEmitterNode+SKTExtras.h"; sourceTree = "<group>"; };
+		CAA8139619958ED1008850FA /* SKEmitterNode+SKTExtras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SKEmitterNode+SKTExtras.m"; sourceTree = "<group>"; };
+		CAA8139719958ED1008850FA /* SKNode+SKTExtras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SKNode+SKTExtras.h"; sourceTree = "<group>"; };
+		CAA8139819958ED1008850FA /* SKNode+SKTExtras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SKNode+SKTExtras.m"; sourceTree = "<group>"; };
+		CAA8139919958ED1008850FA /* SKTAudio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKTAudio.h; sourceTree = "<group>"; };
+		CAA8139A19958ED1008850FA /* SKTAudio.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKTAudio.m; sourceTree = "<group>"; };
+		CAA8139B19958ED1008850FA /* SKTUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKTUtils.h; sourceTree = "<group>"; };
+		CAA8139C19958ED1008850FA /* SKTUtils.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SKTUtils.mm; sourceTree = "<group>"; };
+		CAA813A219959A2F008850FA /* Earth.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Earth.png; sourceTree = "<group>"; };
+		CAA813A419959C04008850FA /* rocketship.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rocketship.png; sourceTree = "<group>"; };
+		CAA813A619959C40008850FA /* Ship.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Ship.h; sourceTree = "<group>"; };
+		CAA813A719959C40008850FA /* Ship.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Ship.m; sourceTree = "<group>"; };
+		CAA813AB1996B448008850FA /* Earth Kid.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Earth Kid.ttf"; sourceTree = "<group>"; };
+		CAA813AF19998E24008850FA /* gravzone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gravzone.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,8 +171,16 @@
 				CAA8134019955705008850FA /* ViewController.m */,
 				CAA8134219955705008850FA /* MyScene.h */,
 				CAA8134319955705008850FA /* MyScene.m */,
-				CAA8134519955705008850FA /* Spaceship.png */,
+				CAA8136C199559AD008850FA /* Background.h */,
+				CAA8136D199559AD008850FA /* Background.m */,
+				CAA8137219955AFB008850FA /* Plannet.h */,
+				CAA8137319955AFB008850FA /* Plannet.m */,
+				CAA813A619959C40008850FA /* Ship.h */,
+				CAA813A719959C40008850FA /* Ship.m */,
 				CAA8134719955705008850FA /* Images.xcassets */,
+				CAA813A91996B420008850FA /* Resources */,
+				CAA8139219958ED1008850FA /* SKTUtils */,
+				CAA81371199559C0008850FA /* Art */,
 				CAA8132E19955705008850FA /* Supporting Files */,
 			);
 			path = Orbit;
@@ -165,6 +213,55 @@
 				CAA8135719955705008850FA /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		CAA81371199559C0008850FA /* Art */ = {
+			isa = PBXGroup;
+			children = (
+				CAA813A419959C04008850FA /* rocketship.png */,
+				CAA813AF19998E24008850FA /* gravzone.png */,
+				CAA813A219959A2F008850FA /* Earth.png */,
+				CAA8138519957991008850FA /* plannet.png */,
+				CAA8136F199559BB008850FA /* background.jpg */,
+			);
+			name = Art;
+			sourceTree = "<group>";
+		};
+		CAA8139219958ED1008850FA /* SKTUtils */ = {
+			isa = PBXGroup;
+			children = (
+				CAA8139319958ED1008850FA /* SKAction+SKTExtras.h */,
+				CAA8139419958ED1008850FA /* SKAction+SKTExtras.m */,
+				CAA8139519958ED1008850FA /* SKEmitterNode+SKTExtras.h */,
+				CAA8139619958ED1008850FA /* SKEmitterNode+SKTExtras.m */,
+				CAA8139719958ED1008850FA /* SKNode+SKTExtras.h */,
+				CAA8139819958ED1008850FA /* SKNode+SKTExtras.m */,
+				CAA8139919958ED1008850FA /* SKTAudio.h */,
+				CAA8139A19958ED1008850FA /* SKTAudio.m */,
+				CAA8139B19958ED1008850FA /* SKTUtils.h */,
+				CAA8139C19958ED1008850FA /* SKTUtils.mm */,
+				CAA8138C19958A65008850FA /* SKTEffects.h */,
+				CAA8138D19958A65008850FA /* SKTEffects.m */,
+				CAA8138E19958A65008850FA /* SKTTimingFunctions.h */,
+				CAA8138F19958A65008850FA /* SKTTimingFunctions.m */,
+			);
+			path = SKTUtils;
+			sourceTree = "<group>";
+		};
+		CAA813A91996B420008850FA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				CAA813AA1996B42E008850FA /* Fonts */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		CAA813AA1996B42E008850FA /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				CAA813AB1996B448008850FA /* Earth Kid.ttf */,
+			);
+			name = Fonts;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -243,11 +340,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CAA8134619955705008850FA /* Spaceship.png in Resources */,
+				CAA8138619957991008850FA /* plannet.png in Resources */,
 				CAA8134819955705008850FA /* Images.xcassets in Resources */,
+				CAA81370199559BB008850FA /* background.jpg in Resources */,
+				CAA813AC1996B448008850FA /* Earth Kid.ttf in Resources */,
 				CAA8133E19955705008850FA /* Main_iPad.storyboard in Resources */,
+				CAA813B019998E24008850FA /* gravzone.png in Resources */,
 				CAA8133B19955705008850FA /* Main_iPhone.storyboard in Resources */,
 				CAA8133219955705008850FA /* InfoPlist.strings in Resources */,
+				CAA813A519959C04008850FA /* rocketship.png in Resources */,
+				CAA813A319959A2F008850FA /* Earth.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -266,9 +368,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CAA8137419955AFB008850FA /* Plannet.m in Sources */,
+				CAA813A019958ED1008850FA /* SKTAudio.m in Sources */,
 				CAA8134419955705008850FA /* MyScene.m in Sources */,
+				CAA8139119958A65008850FA /* SKTTimingFunctions.m in Sources */,
+				CAA8139D19958ED1008850FA /* SKAction+SKTExtras.m in Sources */,
+				CAA813A819959C40008850FA /* Ship.m in Sources */,
+				CAA813A119958ED1008850FA /* SKTUtils.mm in Sources */,
+				CAA8139019958A65008850FA /* SKTEffects.m in Sources */,
 				CAA8134119955705008850FA /* ViewController.m in Sources */,
 				CAA8133819955705008850FA /* AppDelegate.m in Sources */,
+				CAA8139F19958ED1008850FA /* SKNode+SKTExtras.m in Sources */,
+				CAA8136E199559AD008850FA /* Background.m in Sources */,
+				CAA8139E19958ED1008850FA /* SKEmitterNode+SKTExtras.m in Sources */,
 				CAA8133419955705008850FA /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
