@@ -12,11 +12,13 @@
 #import "BackgroundLayer.h"
 #import "Planet.h"
 #import "Ship.h"
-#import "ProgressBar.h"
+#import "RaceProgressBar.h"
+#import "BlackHoleProgressBar.h"
 #import "SKTUtils.h"
 #import "ViewController.h"
 
 static const float NORMAL_SHIP_SPEED_PPS = 60;
+static const float STARTING_BLACK_HOLE_SPEED_PPS = 30;
 
 @interface MyScene()<SKPhysicsContactDelegate>
 @end
@@ -51,10 +53,12 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
     BOOL _newHighScore;
     SKLabelNode *_mileNumLabel;
     SKLabelNode *_milesLabel;
+    int _clickNum;
 
     int _nextMileDistance;
     SKAction *_popMileNum;
-    ProgressBar *_progressBar;
+    RaceProgressBar *_raceProgressBar;
+    BlackHoleProgressBar *_blackHoleProgressBar;
     CGFloat _checkPoint1;
     CGFloat _checkPoint2;
     CGFloat _checkPoint3;
@@ -70,6 +74,9 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
     SKSpriteNode *_aliveShips;
     SKSpriteNode *_randSprite;
     SKSpriteNode *_pauseButton;
+    SKSpriteNode *_blackHole;
+    SKSpriteNode *_blackHoleTrail;
+    NSString *_gameMode;
 }
 
 @synthesize theViewController;
@@ -94,21 +101,8 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
         //initialize ships
         _mainShip = [[Ship alloc] initWithPosition:CGPointMake(_backgroundLayer.size.width*0.5 - 60, 120) andImage:@"main_ship"];
         _mainShip.name = @"main ship";
-        _yellowShip = [[Ship alloc] initWithPosition:CGPointMake(5,120) andImage:@"yellow_ship"];
-        _yellowShip.physicsBody.contactTestBitMask = CNPhysicsCategoryMainshipGravityZone | CNPhysicsCategoryOthershipGravityZone;
-        _yellowShip.name = @"yellow ship";
-        _greenShip = [[Ship alloc] initWithPosition:CGPointMake(65,120) andImage:@"green_ship"];
-        _greenShip.physicsBody.contactTestBitMask = CNPhysicsCategoryMainshipGravityZone | CNPhysicsCategoryOthershipGravityZone;
-        _greenShip.name = @"green ship";
-        _redShip = [[Ship alloc] initWithPosition:CGPointMake(_backgroundLayer.size.width-5,120) andImage:@"red_ship"];
-        _redShip.physicsBody.contactTestBitMask = CNPhysicsCategoryMainshipGravityZone | CNPhysicsCategoryOthershipGravityZone;
-        _redShip.name = @"red ship";
-        _blueShip = [[Ship alloc] initWithPosition:CGPointMake(_backgroundLayer.size.width-65,120) andImage:@"blue_ship"];
-        _blueShip.physicsBody.contactTestBitMask = CNPhysicsCategoryMainshipGravityZone | CNPhysicsCategoryOthershipGravityZone;
-        _blueShip.name = @"blue ship";
-        //initialize an array of the ships
-        _ships = [NSArray arrayWithObjects:_mainShip, _yellowShip, _redShip, _greenShip, _blueShip, nil];
-        
+        _mainShip.zPosition = 100;
+        _ships = [NSArray arrayWithObject:_mainShip];
         
         //set up orbit label
         _orbitLabel = [SKLabelNode labelNodeWithFontNamed:@"Earth Kid"];
@@ -116,7 +110,6 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
         _orbitLabel.fontSize = 60;
         _orbitLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
         _orbitLabel.position = CGPointMake(self.size.width*0.5, 0.85*self.size.height);
-        
         
         //set up record label
         _recordLabel = [SKLabelNode labelNodeWithFontNamed:@"Thirteen Pixel Fonts"];
@@ -133,13 +126,11 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
         self.physicsWorld.contactDelegate = self;
         self.physicsWorld.gravity = CGVectorMake(0, 0);
         
-        
         //set up pause button node
         _pauseButton = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImageNamed:@"pause_button"] size:CGSizeMake(30, 35)];
         _pauseButton.anchorPoint = CGPointMake(0, 1);
         _pauseButton.position = CGPointMake(2, size.height-2);
         _pauseButton.alpha = 0;
-        
         
         //set up miles counter
         //get font with outline
@@ -158,55 +149,26 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
         _milesLabel.position = CGPointMake(self.size.width-5, _mileNumLabel.position.y);
         _milesLabel.alpha = 0;
         
-        
         _popMileNum = [SKAction sequence:@[[SKAction scaleTo:1.2 duration:0.1],[SKAction scaleTo:1.0 duration:0.1]]];
         _nextMileDistance = 400;
-        
-        
-        //set up progress bar
-        _progressBar = [[ProgressBar alloc] initWithScreenSize:self.size];
-        _progressBar.alpha = 0;
-        //set up checkpoints and progressbar variables
-        _checkPoint1 = 400 + 300*2;
-        _checkPoint2 = _checkPoint1 + 300*2;
-        _checkPoint3 = _checkPoint2 + 300*5;
-        _checkPoint4 = _checkPoint3 + 300*5;
-        _progressBar._beforeLastCheckpointPos = 0;
-        _progressBar._lastCheckpointPos = 0;
-        _progressBar._nextCheckpointPos = _checkPoint1;
-        _nextCheckP = _checkPoint2;
-        _noMoreProgressBarUpdates = NO;
 
         
         //set up other variables
         _mainShip.zRotation = M_PI_2;
-        _yellowShip.zRotation = M_PI_2;
-        _greenShip.zRotation = -M_PI_2;
-        _redShip.zRotation = -M_PI_2;
-        _blueShip.zRotation = M_PI_2;
         _mainShip._newPos = _mainShip.position;
-        _yellowShip._newPos = _yellowShip.position;
-        _redShip._newPos = _redShip.position;
-        _greenShip._newPos = _greenShip.position;
-        _blueShip._newPos = _blueShip.position;
-        
         _randSprite = [SKSpriteNode spriteNodeWithColor:[SKColor clearColor] size:CGSizeZero];
         
         //sets ships running
-        for (Ship* ship in _ships) {
-            SKAction *freeFly = [SKAction moveByX:cos(ship.zRotation) * NORMAL_SHIP_SPEED_PPS y:sin(ship.zRotation) * NORMAL_SHIP_SPEED_PPS duration:1];
-            [ship runAction:[SKAction repeatActionForever:freeFly]];
-        }
+        
+        SKAction *freeFly = [SKAction moveByX:cos(_mainShip.zRotation) * NORMAL_SHIP_SPEED_PPS y:sin(_mainShip.zRotation) * NORMAL_SHIP_SPEED_PPS duration:1];
+        [_mainShip runAction:[SKAction repeatActionForever:freeFly]];
+        
         
         //set up planets
         [self createPlanetField];
         
         //add ship nodes to _backgroundLayer
         [_backgroundLayer addChild:_mainShip];
-        [_backgroundLayer addChild:_yellowShip];
-        [_backgroundLayer addChild:_greenShip];
-        [_backgroundLayer addChild:_redShip];
-        [_backgroundLayer addChild:_blueShip];
         
         
         //add _background, _backgroundLayer, _orbitLabel, _recordLabel nodes to the scene
@@ -217,11 +179,13 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
         [self addChild:_recordNumLabel];
         [self addChild:_mileNumLabel];
         [self addChild:_milesLabel];
-        [self addChild:_progressBar];
         [self addChild:_pauseButton];
         
         //scale the backgroundLayer in
         [_backgroundLayer scaleIn];
+        
+        //preset now, but will be set by button in future game
+        _gameMode = @"black_hole";
         
     }
     
@@ -233,18 +197,22 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
     
     UITouch *touch = [touches anyObject];
     CGPoint location = [touch locationInNode:self];
-    
+    _clickNum++;
     
     //if touch is on pause button
-    if (!_paused && CGRectContainsPoint(CGRectMake(0, self.size.height-35, 30, 35), location)) {
+    if (!_paused && !_mainShip._dead && CGRectContainsPoint(CGRectMake(0, self.size.height-35, 30, 35), location)) {
         NSLog(@"paused!");
         _paused = YES;
         _pauseButton.texture = [SKTexture textureWithImageNamed:@"pause_button_pressed"];
         _mainShip.paused = YES;
-        _yellowShip.paused = YES;
-        _redShip.paused = YES;
-        _greenShip.paused = YES;
-        _blueShip.paused = YES;
+        if ([_gameMode isEqualToString:@"race"]) {
+            _yellowShip.paused = YES;
+            _redShip.paused = YES;
+            _greenShip.paused = YES;
+            _blueShip.paused = YES;
+        }else if ([_gameMode isEqualToString:@"black_hole"]){
+            _blackHole.paused = YES;
+        }
         for (int i = _plannetCounter + 15; i >= _plannetCounter; i--){
             Planet *planet = [_planets objectAtIndex:i];
             planet.paused = YES;
@@ -258,23 +226,27 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
             _paused = NO;
             _pauseButton.texture = [SKTexture textureWithImageNamed:@"pause_button"];
             _mainShip.paused = NO;
-            _yellowShip.paused = NO;
-            _redShip.paused = NO;
-            _greenShip.paused = NO;
-            _blueShip.paused = NO;
+            if ([_gameMode isEqualToString:@"race"]) {
+                _yellowShip.paused = NO;
+                _redShip.paused = NO;
+                _greenShip.paused = NO;
+                _blueShip.paused = NO;
+            }else if ([_gameMode isEqualToString:@"black_hole"]){
+                _blackHole.paused = NO;
+            }
             for (int i = _plannetCounter + 15; i >= _plannetCounter; i--){
                 Planet *planet = [_planets objectAtIndex:i];
                 planet.paused = NO;
             }
         }];
-        
+    //if main menu button is pressed
     }else if (_paused && (CGRectContainsPoint(CGRectMake([_pauseMenu convertPoint:_mainMenuButton.position toNode:self].x - 0.5*_mainMenuButton.size.width, [_pauseMenu convertPoint:_mainMenuButton.position toNode:self].y - 0.5*_mainMenuButton.size.height, _mainMenuButton.size.width, _mainMenuButton.size.height), location)))
     {
         _mainMenuButton.texture = [SKTexture textureWithImageNamed:@"main_menu_button_pressed"];
         MyScene *newScene = [MyScene sceneWithSize:self.size];
         newScene.scaleMode = SKSceneScaleModeAspectFill;
         [self.view presentScene: newScene transition:[SKTransition crossFadeWithDuration:2]];
-        
+    //if main menu button is pressed
     }else if (_mainShip._dead && (CGRectContainsPoint(CGRectMake([_deadMenu convertPoint:_mainMenuButton.position toNode:self].x - 0.5*_mainMenuButton.size.width, [_deadMenu convertPoint:_mainMenuButton.position toNode:self].y - 0.5*_mainMenuButton.size.height, _mainMenuButton.size.width, _mainMenuButton.size.height), location)))
     {
         _mainMenuButton.texture = [SKTexture textureWithImageNamed:@"main_menu_button_pressed"];
@@ -282,26 +254,124 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
         newScene.scaleMode = SKSceneScaleModeAspectFill;
         [self.view presentScene: newScene transition:[SKTransition crossFadeWithDuration:2]];
         
-        //if game has not been started
-    }else if(!_gameStarted){
+    //if game has not been started
+    }else if(!_gameStarted && _clickNum == 1){
+        
+        //if race button is selected
+        if ([_gameMode isEqualToString:@"race"])
+        {
+            _yellowShip = [[Ship alloc] initWithPosition:CGPointMake(5,120) andImage:@"yellow_ship"];
+            _yellowShip.physicsBody.contactTestBitMask = CNPhysicsCategoryMainshipGravityZone | CNPhysicsCategoryOthershipGravityZone;
+            _yellowShip.name = @"yellow ship";
+            _greenShip = [[Ship alloc] initWithPosition:CGPointMake(65,120) andImage:@"green_ship"];
+            _greenShip.physicsBody.contactTestBitMask = CNPhysicsCategoryMainshipGravityZone | CNPhysicsCategoryOthershipGravityZone;
+            _greenShip.name = @"green ship";
+            _redShip = [[Ship alloc] initWithPosition:CGPointMake(_backgroundLayer.size.width-5,120) andImage:@"red_ship"];
+            _redShip.physicsBody.contactTestBitMask = CNPhysicsCategoryMainshipGravityZone | CNPhysicsCategoryOthershipGravityZone;
+            _redShip.name = @"red ship";
+            _blueShip = [[Ship alloc] initWithPosition:CGPointMake(_backgroundLayer.size.width-65,120) andImage:@"blue_ship"];
+            _blueShip.physicsBody.contactTestBitMask = CNPhysicsCategoryMainshipGravityZone | CNPhysicsCategoryOthershipGravityZone;
+            _blueShip.name = @"blue ship";
+            //initialize an array of the ships
+            _ships = [NSArray arrayWithObjects:_mainShip, _yellowShip, _redShip, _greenShip, _blueShip, nil];
+            
+            _yellowShip._newPos = _yellowShip.position;
+            _redShip._newPos = _redShip.position;
+            _greenShip._newPos = _greenShip.position;
+            _blueShip._newPos = _blueShip.position;
+            
+            _yellowShip.zRotation = M_PI_2;
+            _greenShip.zRotation = -M_PI_2;
+            _redShip.zRotation = -M_PI_2;
+            _blueShip.zRotation = M_PI_2;
+            
+            //set up progress bar
+            _raceProgressBar = [[RaceProgressBar alloc] initWithScreenSize:self.size];
+            _raceProgressBar.alpha = 0;
+            //set up checkpoints and progressbar variables
+            _checkPoint1 = 400 + 300*2;
+            _checkPoint2 = _checkPoint1 + 300*2;
+            _checkPoint3 = _checkPoint2 + 300*5;
+            _checkPoint4 = _checkPoint3 + 300*5;
+            _raceProgressBar._beforeLastCheckpointPos = 0;
+            _raceProgressBar._lastCheckpointPos = 0;
+            _raceProgressBar._nextCheckpointPos = _checkPoint1;
+            _nextCheckP = _checkPoint2;
+            _noMoreProgressBarUpdates = NO;
+            
+            [_backgroundLayer addChild:_yellowShip];
+            [_backgroundLayer addChild:_greenShip];
+            [_backgroundLayer addChild:_redShip];
+            [_backgroundLayer addChild:_blueShip];
+            [self addChild:_raceProgressBar];
+            
+            NSArray *_otherShips = [NSArray arrayWithObjects:_yellowShip, _greenShip, _redShip, _blueShip, nil];
+             
+            //sets ships running
+            for (Ship* ship in _otherShips) {
+                SKAction *freeFly = [SKAction moveByX:cos(ship.zRotation) * NORMAL_SHIP_SPEED_PPS y:sin(ship.zRotation) * NORMAL_SHIP_SPEED_PPS duration:1];
+                [ship runAction:[SKAction repeatActionForever:freeFly]];
+            }
+        }
+        
+        //if blackhole button is selected
+        if ([_gameMode isEqualToString:@"black_hole"])
+        {
+            _blackHoleProgressBar = [[BlackHoleProgressBar alloc] initWithScreenSize:self.size];
+            _blackHoleProgressBar.alpha = 0;
+            [self addChild:_blackHoleProgressBar];
+            
+            //(width set as such due to _backgroundLayer's scale of 2)
+            _blackHole = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImageNamed:@"black_hole_squished"] size:CGSizeMake(_backgroundLayer.size.width/2, _backgroundLayer.size.width/5)];
+            _blackHole.anchorPoint = CGPointMake(0, 0.5);
+            _blackHole.position = CGPointMake(0, 0);
+            
+            _blackHoleTrail = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImageNamed:@"black_hole_screen_trail"] size:CGSizeMake(_backgroundLayer.size.width/2, _blackHole.position.y)];
+            _blackHoleTrail.anchorPoint = CGPointMake(0, 0.0);
+            _blackHoleTrail.position = CGPointMake(0, 0);
+            
+            [_backgroundLayer addChild:_blackHoleTrail];
+            [_backgroundLayer addChild:_blackHole];
+            
+            SKAction *freeFly = [SKAction moveByX:cos(_mainShip.zRotation) * NORMAL_SHIP_SPEED_PPS y:sin(_mainShip.zRotation) * NORMAL_SHIP_SPEED_PPS duration:1];
+            [_mainShip runAction:[SKAction repeatActionForever:freeFly]];
+            
+            
+            SKAction *moveBlackHole = [SKAction repeatActionForever:[SKAction moveBy:CGVectorMake(0, STARTING_BLACK_HOLE_SPEED_PPS) duration:1]];
+            [_blackHole runAction:[SKAction sequence:@[[SKAction waitForDuration:8], moveBlackHole]]];
+        }
+        //endif
+        
+        //if
         
         [self zoomOut];
         
         //set startgame to true after 3.5 and changes the stoplight color every 1 second
-        SKAction *startGame = [SKAction sequence:@[[SKAction waitForDuration:0.5],[SKAction colorizeWithColor:[SKColor redColor] colorBlendFactor:1 duration:1], [SKAction colorizeWithColor:[SKColor yellowColor] colorBlendFactor:1 duration:1], [SKAction colorizeWithColor:[SKColor redColor] colorBlendFactor:1 duration:1], [SKAction runBlock:^{
+        SKAction *startGame = [SKAction sequence:@[[SKAction waitForDuration:0.5], [SKAction runBlock:^{
+            _stopLightPlanet1._planetBody.color = [SKColor redColor];
+            _stopLightPlanet2._planetBody.color = [SKColor redColor];
+            _stopLightPlanet1._planetBody.colorBlendFactor = 1;
+            _stopLightPlanet2._planetBody.colorBlendFactor = 1;
+        }], [SKAction waitForDuration:1],[SKAction runBlock:^{
+            _stopLightPlanet1._planetBody.color = [SKColor yellowColor];
+            _stopLightPlanet2._planetBody.color = [SKColor yellowColor];
+        }], [SKAction waitForDuration:1], [SKAction runBlock:^{
+            _stopLightPlanet1._planetBody.color = [SKColor greenColor];
+            _stopLightPlanet2._planetBody.color = [SKColor greenColor];
+        }], [SKAction runBlock:^{
             _gameStarted = YES;
         }]]];
-        [_stopLightPlanet1 runAction:startGame];
-        [_stopLightPlanet1 runAction:startGame];
+        [_stopLightPlanet1._planetBody runAction:startGame];
         
-        //if game is in play and _mainShip has a current planet
-    }else if(CGRectContainsPoint(CGRectMake(32, 0, _backgroundLayer.size.width, self.size.height - 35), location) && _mainShip._currentPlanet){
+
+        
+    //if game is in play and _mainShip has a current planet
+    }else if(_gameStarted && CGRectContainsPoint(CGRectMake(32, 0, _backgroundLayer.size.width, self.size.height - 35), location) && _mainShip._currentPlanet){
         
         //remove all actions on the planets gravzone image and start the pulsing action on it
         [_mainShip._currentPlanet._gravZoneImage removeAllActions];
         [_mainShip._currentPlanet._gravZoneImage runAction:_mainShip._currentPlanet._pulseAction];
         [_mainShip._currentPlanet popPlanet];
-        
         
         //set mainship to have no current planet
         _mainShip._currentPlanet = nil;
@@ -338,19 +408,10 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
         //move background
         [self moveBackground];
         
+        [self checkShipDeath];
         
-        //adjust progress bars
-        if (!_noMoreProgressBarUpdates)
-            //if returns yes, mainship is above next checkpoint
-            if ([_progressBar adjustProgressBars_nextCheckPoint:_nextCheckP yellowPos:_yellowShip.position.y redPos:_redShip.position.y mainPos:_mainShip.position.y greenPos:_greenShip.position.y bluePos:_blueShip.position.y])
-            {
-                if (_nextCheckP == _checkPoint2)
-                    _nextCheckP = _checkPoint3;
-                if (_nextCheckP == _checkPoint3)
-                    _nextCheckP = _checkPoint4;
-                if (_nextCheckP == _checkPoint4)
-                    _noMoreProgressBarUpdates = YES;
-            }
+        //adjust progress bar
+        [self adjustProgressBars];
     }
 }
 
@@ -368,9 +429,33 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
         }
         
         //reposition ship if off screen
-        [self repositionShip:_mainShip];
+        [self repositionShip:ship];
+        
+        
+        if ([_gameMode isEqualToString:@"race"]){
+            //exit ship from orbit
+            if (ship != _mainShip && ship._inOrbit && ship.zRotation < ship._releaseAngle + 0.01 && ship.zRotation > ship._releaseAngle - 0.01)
+            {
+                //remove all actions on the planets gravzone image and start the pulsing action on it
+                [ship._currentPlanet._gravZoneImage removeAllActions];
+                [ship._currentPlanet._gravZoneImage runAction:ship._currentPlanet._pulseAction];
+                [ship._currentPlanet popPlanet];
+                
+                
+                //set mainship to have no current planet
+                ship._currentPlanet = nil;
+                //set mainship inOrbit property to no
+                ship._inOrbit = NO;
+                //set mainShip planetToShipAngle property to 0
+                ship._planetToShipAngle = 0;
+                
+                //remove all actions on mainShip and run freefly action based on the mainship zRotation property
+                [ship removeAllActions];
+                SKAction *freeFly = [SKAction moveByX:cos(_mainShip.zRotation) * NORMAL_SHIP_SPEED_PPS y:sin(_mainShip.zRotation) * NORMAL_SHIP_SPEED_PPS duration:1];
+                [ship runAction:[SKAction repeatActionForever:freeFly]];
+            }
+        }
     }
-
 }
 
 //when ship touches a planets gravity field
@@ -378,191 +463,220 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
 {
     NSLog(@"Contact");
     
-    //gets collision bitmask based on two bodies
-    uint32_t collision = (contact.bodyA.categoryBitMask|contact.bodyB.categoryBitMask);
     
-    //if collision is between ship and gravzone
-    if(collision == (CNPhysicsCategoryShip | CNPhysicsCategoryMainshipGravityZone)){
+    //if body A of the contact is a gravity zone
+    if(contact.bodyA.categoryBitMask == CNPhysicsCategoryMainshipGravityZone){
         
-        //if body A of the contact is a gravity zone
-        if(contact.bodyA.categoryBitMask == CNPhysicsCategoryMainshipGravityZone){
+        //insert bellow code
+        
+    }else if(contact.bodyB.categoryBitMask == CNPhysicsCategoryMainshipGravityZone || contact.bodyB.categoryBitMask == CNPhysicsCategoryOthershipGravityZone){
+        
+        Ship *ship = (Ship*)contact.bodyA.node;
+        //set ships current planet as the parent of the body's node
+        ship._currentPlanet = (Planet *)contact.bodyB.node.parent;
+        //removes actions on current planet's gravZone image
+        [ship._currentPlanet._gravZoneImage removeAllActions];
+        //scale gravzone image to 1.03
+        [ship._currentPlanet._gravZoneImage runAction:[SKAction scaleTo:1.03 duration:0.2]];
+        
+        //remove all actions from ship
+        [ship removeAllActions];
+        
+        //set the planet to ship angle to a number between 0 and 2PI
+        ship._planetToShipAngle = CGPointToAngle(CGPointSubtract(ship.position, ship._currentPlanet.position));
+        while (ship._planetToShipAngle > M_PI){ ship._planetToShipAngle -= M_PI; }
+        while (ship._planetToShipAngle < -M_PI) { ship._planetToShipAngle += M_PI;}
+        
+        //set the angle from the ship to the planet to a number between -M_PI and M_PI
+        float shipToPlanetAngle = CGPointToAngle(CGPointSubtract(ship._currentPlanet.position, ship.position));
+        while (shipToPlanetAngle > M_PI){ shipToPlanetAngle -= M_PI; }
+        while (shipToPlanetAngle < -M_PI) { shipToPlanetAngle += M_PI; }
+        
+        //set the accuracy angle to the angle between the ship to planet angle and the zRotation (directional angle) of the ship
+        //set accuracy angle to a number between 0 and 2PI
+        float accuracyAngle = ((float)180/M_PI*(ship.zRotation - shipToPlanetAngle));
+        while (accuracyAngle > 100){ accuracyAngle -= 90; }
+        while (accuracyAngle < -100) { accuracyAngle += 90; }
+        
+        NSLog(@"z rotation: %f", ship.zRotation);
+        NSLog(@"shipToplanetAngle: %f", shipToPlanetAngle);
+        NSLog(@"accuracy angle: %f", accuracyAngle);
+        
+        //sets the clockwise property depending on which side of the planet the ship hit with respect to where it last left orbit
+        if(accuracyAngle >= 0){
+            ship._clockwise = YES;
+            ship._clockwiseInt = 1;
+        } else {
+            ship._clockwise = NO;
+            ship._clockwiseInt = -1;
+        }
+        
+        //if accuracy angle is between -4 and 4
+        if (accuracyAngle > -4 && accuracyAngle < 4){
+            //set ships dead property to yes
+            NSLog(@"dead!");
+            ship._dead = YES;
+            _paused = YES;
             
-            //insert bellow code
-            
-        }else if(contact.bodyB.categoryBitMask == CNPhysicsCategoryMainshipGravityZone){
-            
-            //Ship *_currentShip = (Ship*)contact.bodyA.node;
-            //set ships current planet as the parent of the body's node
-            _mainShip._currentPlanet = (Planet *)contact.bodyB.node.parent;
-            //removes actions on current planet's gravZone image
-            [_mainShip._currentPlanet._gravZoneImage removeAllActions];
-            //scale gravzone image to 1.03
-            [_mainShip._currentPlanet._gravZoneImage runAction:[SKAction scaleTo:1.03 duration:0.2]];
-            
-            //remove all actions from mainship
-            [_mainShip removeAllActions];
-            
-            //set the planet to ship angle to a number between 0 and 2PI
-            _mainShip._planetToShipAngle = CGPointToAngle(CGPointSubtract(_mainShip.position, _mainShip._currentPlanet.position));
-            while (_mainShip._planetToShipAngle > M_PI){ _mainShip._planetToShipAngle -= M_PI; }
-            while (_mainShip._planetToShipAngle < -M_PI) { _mainShip._planetToShipAngle += M_PI;}
-            
-            //set the angle from the ship to the planet to a number between -M_PI and M_PI
-            float shipToPlanetAngle = CGPointToAngle(CGPointSubtract(_mainShip._currentPlanet.position, _mainShip.position));
-            while (shipToPlanetAngle > M_PI){ shipToPlanetAngle -= M_PI; }
-            while (shipToPlanetAngle < -M_PI) { shipToPlanetAngle += M_PI; }
-            
-            //set the accuracy angle to the angle between the ship to planet angle and the zRotation (directional angle) of the ship
-            //set accuracy angle to a number between 0 and 2PI
-            float accuracyAngle = ((float)180/M_PI*(_mainShip.zRotation - shipToPlanetAngle));
-            while (accuracyAngle > 100){ accuracyAngle -= 90; }
-            while (accuracyAngle < -100) { accuracyAngle += 90; }
-            
-            NSLog(@"z rotation: %f", _mainShip.zRotation);
-            NSLog(@"shipToplanetAngle: %f", shipToPlanetAngle);
-            NSLog(@"accuracy angle: %f", accuracyAngle);
-            
-            //sets the clockwise property depending on which side of the planet the ship hit with respect to where it last left orbit
-            if(accuracyAngle >= 0){ _mainShip._clockwise = YES; } else { _mainShip._clockwise = NO; }
-            
-            //if accuracy angle is between -4 and 4
-            if (accuracyAngle > -4 && accuracyAngle < 4){
-                //set mainships dead property to yes
-                NSLog(@"dead!");
-                _mainShip._dead = YES;
-                _paused = YES;
+            if([_gameMode isEqualToString:@"race"])
+            {
                 _yellowShip.paused = YES;
                 _redShip.paused = YES;
                 _greenShip.paused = YES;
                 _blueShip.paused = YES;
-
-                if (_miles > _highScore){
-                    _newHighScore = YES;
-                    _highScore = _miles;
-                }
-                
-                [self killShip:_mainShip];
-                [self runAction: [SKAction waitForDuration:2] completion:^{
-                    [self openDeadMenu];
-                }];
-                
-                
+            }else if ([_gameMode isEqualToString:@"black_hole"])
+            {
             }
             
-            //if mainship is not dead
-            if(!_mainShip._dead){
-                
-                CGPoint newPosition;
-                
-                //if ship should rotate clockwise
-                if(_mainShip._clockwise){
-                    //create the curved path that the ship will take to go to the start of the orbit path
-                    UIBezierPath *entrancePath = [UIBezierPath bezierPath];
-                    //set the angle the ship should go to
-                    CGFloat newAngle = _mainShip._planetToShipAngle - M_PI_4;
-                    //set the end position with the new angle and the position and radius of the current planet
-                    newPosition = CGPointMake(_mainShip._currentPlanet.position.x + cos(newAngle)*_mainShip._currentPlanet._radius*1.3, _mainShip._currentPlanet.position.y + sin(newAngle)*_mainShip._currentPlanet._radius*1.3);
-                    //make a control point for the curve that is 0.3 times the radius of the current planet infront of the mainship
-                    CGPoint controlPoint = CGPointAdd(_mainShip.position, CGPointMake(_mainShip._currentPlanet._radius*0.4*cos(_mainShip.zRotation), _mainShip._currentPlanet._radius*0.4*sin(_mainShip.zRotation)));
-                    //make a curve that goes from ship position to the desired position
-                    [entrancePath moveToPoint:_mainShip.position];
-                    [entrancePath addQuadCurveToPoint: newPosition controlPoint:controlPoint];
-                    [entrancePath addArcWithCenter:_mainShip._currentPlanet.position radius:_mainShip._currentPlanet._radius * 1.3 startAngle:newAngle endAngle:newAngle - (2*M_PI - 0.0001) clockwise:NO];
-                    _mainShip._currentPlanet._entrancePath = entrancePath;
-                    //set the entrancePathLength based on the entrancePath specifications
-                    _mainShip._entrancePathLength = [self bezierCurveLengthFromStartPoint:_mainShip.position toEndPoint:newPosition withControlPoint:controlPoint];
-                }else{
-                    //create the curved path that the ship will take to go to the start of the orbit path
-                    UIBezierPath *entrancePath = [UIBezierPath bezierPath];
-                    //set the angle the ship shoul go to
-                    CGFloat newAngle = _mainShip._planetToShipAngle + M_PI_4;
-                    //set the end position with the new angle and the position and radius of the current planet
-                    newPosition = CGPointMake(_mainShip._currentPlanet.position.x + cos(newAngle)*_mainShip._currentPlanet._radius*1.3, _mainShip._currentPlanet.position.y + sin(newAngle)*_mainShip._currentPlanet._radius*1.3);
-                    //make a control point for the curve that is 0.3 times the radius of the current planet infront of the mainship
-                    CGPoint controlPoint = CGPointAdd(_mainShip.position, CGPointMake(_mainShip._currentPlanet._radius*0.4*cos(_mainShip.zRotation), _mainShip._currentPlanet._radius*0.4*sin(_mainShip.zRotation)));
-                    //make a curve that goes from ship position to the desired position
-                    [entrancePath moveToPoint:_mainShip.position];
-                    [entrancePath addQuadCurveToPoint: newPosition controlPoint:controlPoint];
-                    [entrancePath addArcWithCenter:_mainShip._currentPlanet.position radius:_mainShip._currentPlanet._radius * 1.3 startAngle:newAngle endAngle:newAngle + (2*M_PI - 0.0001) clockwise:YES];
-                    _mainShip._currentPlanet._entrancePath = entrancePath;
-                    //set the entrancePathLength based on the entrancePath specifications
-                    _mainShip._entrancePathLength = [self bezierCurveLengthFromStartPoint:_mainShip.position toEndPoint:newPosition withControlPoint:controlPoint];
-                }
-                
-                //sets the path that the ship will follow, starting and ending with its current position
-                //issue with clockwise - seems flipped for some reason here
-                
-                CGFloat theNewAngle;
-                
-                if(_mainShip._clockwise){
-                    theNewAngle = CGPointToAngle(CGPointSubtract(newPosition, _mainShip._currentPlanet.position));
-                    _mainShip._currentPlanet._gravPath = [UIBezierPath bezierPathWithArcCenter: _mainShip._currentPlanet.position radius: _mainShip._currentPlanet._radius * 1.3 startAngle:theNewAngle endAngle: theNewAngle - (2*M_PI - 0.0001) clockwise: !_mainShip._clockwise];
-                    theNewAngle -= M_PI_2;
-                }else{
-                    theNewAngle = CGPointToAngle(CGPointSubtract(newPosition, _mainShip._currentPlanet.position));
-                    _mainShip._currentPlanet._gravPath = [UIBezierPath bezierPathWithArcCenter: _mainShip._currentPlanet.position radius: _mainShip._currentPlanet._radius * 1.3 startAngle:theNewAngle endAngle: theNewAngle + (2*M_PI - 0.0001) clockwise: !_mainShip._clockwise];
-                    theNewAngle += M_PI_2;
-                }
-                
-                
-                SKAction *followPath = [SKAction repeatActionForever: [SKAction followPath: _mainShip._currentPlanet._gravPath.CGPath asOffset: NO orientToPath: NO duration:((2*M_PI) *_mainShip._currentPlanet._radius * 1.3 ) / NORMAL_SHIP_SPEED_PPS]];
-                
-                //run the actions that enter the ship into orbit, set _inOrbit to true, and run the ship laps around the planet
-                [ _mainShip runAction: [ SKAction sequence:@[ [ SKAction followPath:_mainShip._currentPlanet._entrancePath.CGPath asOffset:NO orientToPath:NO duration:_mainShip._entrancePathLength/NORMAL_SHIP_SPEED_PPS+((2*M_PI) *_mainShip._currentPlanet._radius * 1.3 ) / NORMAL_SHIP_SPEED_PPS ], followPath ] ] ];
-                
-                [ self runAction:[ SKAction waitForDuration:_mainShip._entrancePathLength/NORMAL_SHIP_SPEED_PPS] completion:^{
-                    _mainShip._inOrbit = YES;
-                } ];
-                
+            if (_miles > _highScore){
+                _newHighScore = YES;
+                _highScore = _miles;
             }
             
-            if ( accuracyAngle > 4){
+            [self killShip:ship];
+            [self runAction: [SKAction waitForDuration:2] completion:^{
+                [self openDeadMenu];
+            }];
+        }else{
+            int currentPlannetIndex = [_planets indexOfObject:ship._currentPlanet];
+            if (ship._currentPlanet.position.x <= _backgroundLayer.size.width*0.33-10){
+                Planet *newPlanet = [_planets objectAtIndex: currentPlannetIndex + 3 + arc4random_uniform(2)];
+                float newPlanetToReleasePointAngle = CGPointToAngle(CGPointSubtract(ship._currentPlanet.position, newPlanet.position)) - ship._clockwiseInt*asin((1.3*ship._currentPlanet._radius)/CGPointLength( CGPointSubtract(ship._currentPlanet.position, newPlanet.position)));
+                float newAccuracyAngle = arc4random_uniform(90)*M_PI/180;
+                CGPoint pointToHit = CGPointMake(newPlanet.position.x + cos(newPlanetToReleasePointAngle+newAccuracyAngle)*newPlanet._radius*1.8, newPlanet.position.y + sin(newPlanetToReleasePointAngle+newAccuracyAngle)*newPlanet._radius*1.8);
+                ship._releaseAngle = CGPointToAngle(CGPointSubtract(pointToHit, ship._currentPlanet.position)) + ship._clockwiseInt*(acos((1.3*ship._currentPlanet._radius)/CGPointLength(CGPointSubtract(pointToHit, ship._currentPlanet.position))) - 90);
                 
-                accuracyAngle = abs(accuracyAngle);
+            }else if (ship._currentPlanet.position.x <= _backgroundLayer.size.width*0.67-10){
+                Planet *newPlanet = [_planets objectAtIndex:currentPlannetIndex + 2 + arc4random_uniform(3)];
+                float newPlanetToReleasePointAngle = CGPointToAngle(CGPointSubtract(ship._currentPlanet.position, newPlanet.position)) - ship._clockwiseInt*asin((1.3*ship._currentPlanet._radius)/CGPointLength( CGPointSubtract(ship._currentPlanet.position, newPlanet.position)));
+                float newAccuracyAngle = arc4random_uniform(90)*M_PI/180;
+                CGPoint pointToHit = CGPointMake(newPlanet.position.x + cos(newPlanetToReleasePointAngle+newAccuracyAngle)*newPlanet._radius*1.8, newPlanet.position.y + sin(newPlanetToReleasePointAngle+newAccuracyAngle)*newPlanet._radius*1.8);
+                ship._releaseAngle = CGPointToAngle(CGPointSubtract(pointToHit, ship._currentPlanet.position)) + ship._clockwiseInt*(acos((1.3*ship._currentPlanet._radius)/CGPointLength(CGPointSubtract(pointToHit, ship._currentPlanet.position))) - 90);
                 
-                if(accuracyAngle <= 100 && accuracyAngle > 30){
-                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 1.3 duration:0.2]];
-                }else if(accuracyAngle <= 30 && accuracyAngle > 20){
-                    //no change in speed
-                }else if(accuracyAngle <= 20 && accuracyAngle > 15){
-                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 0.9 duration:0.2]];
-                }else if(accuracyAngle <= 15 && accuracyAngle > 12){
-                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 0.75 duration:0.2]];
-                }else if(accuracyAngle <= 12 && accuracyAngle > 10){
-                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 0.6 duration:0.2]];
-                }else if(accuracyAngle <= 10 && accuracyAngle > 8){
-                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 0.5 duration:0.2]];
-                }else if(accuracyAngle <= 8 && accuracyAngle > 6){
-                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 0.4 duration:0.2]];
-                }else if(accuracyAngle <= 6 && accuracyAngle > 4){
-                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 0.25 duration:0.2]];
-                }
-                
-            }else if(accuracyAngle < -4){
-                
-                accuracyAngle = abs(accuracyAngle);
-                
-                if(accuracyAngle <= 100 && accuracyAngle > 30){
-                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 1.3 duration:0.2]];
-                }else if(accuracyAngle <= 30 && accuracyAngle > 20){
-                    //no change in speed
-                }else if(accuracyAngle <= 20 && accuracyAngle > 15){
-                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 0.9 duration:0.2]];
-                }else if(accuracyAngle <= 15 && accuracyAngle > 12){
-                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 0.75 duration:0.2]];
-                }else if(accuracyAngle <= 12 && accuracyAngle > 10){
-                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 0.6 duration:0.2]];
-                }else if(accuracyAngle <= 10 && accuracyAngle > 8){
-                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 0.5 duration:0.2]];
-                }else if(accuracyAngle <= 8 && accuracyAngle > 6){
-                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 0.4 duration:0.2]];
-                }else if(accuracyAngle <= 6 && accuracyAngle > 4){
-                    [_mainShip runAction:[SKAction speedTo: _mainShip.speed * 0.25 duration:0.2]];
-                }
-                
+            }else{
+                Planet* newPlanet = [_planets objectAtIndex: currentPlannetIndex + 2 + arc4random_uniform(2)];
+                float newPlanetToReleasePointAngle = CGPointToAngle(CGPointSubtract(ship._currentPlanet.position, newPlanet.position)) - ship._clockwiseInt*asin((1.3*ship._currentPlanet._radius)/CGPointLength( CGPointSubtract(ship._currentPlanet.position, newPlanet.position)));
+                float newAccuracyAngle = arc4random_uniform(90)*M_PI/180;
+                CGPoint pointToHit = CGPointMake(newPlanet.position.x + cos(newPlanetToReleasePointAngle+newAccuracyAngle)*newPlanet._radius*1.8, newPlanet.position.y + sin(newPlanetToReleasePointAngle+newAccuracyAngle)*newPlanet._radius*1.8);
+                ship._releaseAngle = CGPointToAngle(CGPointSubtract(pointToHit, ship._currentPlanet.position)) + ship._clockwiseInt*(acos((1.3*ship._currentPlanet._radius)/CGPointLength(CGPointSubtract(pointToHit, ship._currentPlanet.position))) - 90);
+            }
+        }
+        
+        //if ship is not dead
+        if(!ship._dead){
+            
+            CGPoint newPosition;
+            
+            //if ship should rotate clockwise
+            if(ship._clockwise){
+                //create the curved path that the ship will take to go to the start of the orbit path
+                UIBezierPath *entrancePath = [UIBezierPath bezierPath];
+                //set the angle the ship should go to
+                CGFloat newAngle = ship._planetToShipAngle - M_PI_4;
+                //set the end position with the new angle and the position and radius of the current planet
+                newPosition = CGPointMake(ship._currentPlanet.position.x + cos(newAngle)*ship._currentPlanet._radius*1.3, ship._currentPlanet.position.y + sin(newAngle)*ship._currentPlanet._radius*1.3);
+                //make a control point for the curve that is 0.3 times the radius of the current planet infront of the ship
+                CGPoint controlPoint = CGPointAdd(ship.position, CGPointMake(ship._currentPlanet._radius*0.4*cos(ship.zRotation), ship._currentPlanet._radius*0.4*sin(ship.zRotation)));
+                //make a curve that goes from ship position to the desired position
+                [entrancePath moveToPoint:ship.position];
+                [entrancePath addQuadCurveToPoint: newPosition controlPoint:controlPoint];
+                [entrancePath addArcWithCenter:ship._currentPlanet.position radius:ship._currentPlanet._radius * 1.3 startAngle:newAngle endAngle:newAngle - (2*M_PI - 0.0001) clockwise:NO];
+                ship._currentPlanet._entrancePath = entrancePath;
+                //set the entrancePathLength based on the entrancePath specifications
+                ship._entrancePathLength = [self bezierCurveLengthFromStartPoint:ship.position toEndPoint:newPosition withControlPoint:controlPoint];
+            }else{
+                //create the curved path that the ship will take to go to the start of the orbit path
+                UIBezierPath *entrancePath = [UIBezierPath bezierPath];
+                //set the angle the ship shoul go to
+                CGFloat newAngle = ship._planetToShipAngle + M_PI_4;
+                //set the end position with the new angle and the position and radius of the current planet
+                newPosition = CGPointMake(ship._currentPlanet.position.x + cos(newAngle)*ship._currentPlanet._radius*1.3, ship._currentPlanet.position.y + sin(newAngle)*ship._currentPlanet._radius*1.3);
+                //make a control point for the curve that is 0.3 times the radius of the current planet infront of the ship
+                CGPoint controlPoint = CGPointAdd(ship.position, CGPointMake(ship._currentPlanet._radius*0.4*cos(ship.zRotation), ship._currentPlanet._radius*0.4*sin(ship.zRotation)));
+                //make a curve that goes from ship position to the desired position
+                [entrancePath moveToPoint:ship.position];
+                [entrancePath addQuadCurveToPoint: newPosition controlPoint:controlPoint];
+                [entrancePath addArcWithCenter:ship._currentPlanet.position radius:ship._currentPlanet._radius * 1.3 startAngle:newAngle endAngle:newAngle + (2*M_PI - 0.0001) clockwise:YES];
+                ship._currentPlanet._entrancePath = entrancePath;
+                //set the entrancePathLength based on the entrancePath specifications
+                ship._entrancePathLength = [self bezierCurveLengthFromStartPoint:ship.position toEndPoint:newPosition withControlPoint:controlPoint];
+            }
+            
+            //sets the path that the ship will follow, starting and ending with its current position
+            //issue with clockwise - seems flipped for some reason here
+            
+            CGFloat theNewAngle;
+            
+            if(ship._clockwise){
+                theNewAngle = CGPointToAngle(CGPointSubtract(newPosition, ship._currentPlanet.position));
+                ship._currentPlanet._gravPath = [UIBezierPath bezierPathWithArcCenter: ship._currentPlanet.position radius: ship._currentPlanet._radius * 1.3 startAngle:theNewAngle endAngle: theNewAngle - (2*M_PI - 0.0001) clockwise: !ship._clockwise];
+                theNewAngle -= M_PI_2;
+            }else{
+                theNewAngle = CGPointToAngle(CGPointSubtract(newPosition, ship._currentPlanet.position));
+                ship._currentPlanet._gravPath = [UIBezierPath bezierPathWithArcCenter: ship._currentPlanet.position radius: ship._currentPlanet._radius * 1.3 startAngle:theNewAngle endAngle: theNewAngle + (2*M_PI - 0.0001) clockwise: !ship._clockwise];
+                theNewAngle += M_PI_2;
+            }
+            
+            
+            SKAction *followPath = [SKAction repeatActionForever: [SKAction followPath: ship._currentPlanet._gravPath.CGPath asOffset: NO orientToPath: NO duration:((2*M_PI) *ship._currentPlanet._radius * 1.3 ) / NORMAL_SHIP_SPEED_PPS]];
+            
+            //run the actions that enter the ship into orbit, set _inOrbit to true, and run the ship laps around the planet
+            [ ship runAction: [ SKAction sequence:@[ [ SKAction followPath:ship._currentPlanet._entrancePath.CGPath asOffset:NO orientToPath:NO duration:ship._entrancePathLength/NORMAL_SHIP_SPEED_PPS+((2*M_PI) *ship._currentPlanet._radius * 1.3 ) / NORMAL_SHIP_SPEED_PPS ], followPath ] ] ];
+            
+            [ self runAction:[ SKAction waitForDuration:ship._entrancePathLength/NORMAL_SHIP_SPEED_PPS] completion:^{
+                ship._inOrbit = YES;
+            } ];
+            
+        }
+        
+        if ( accuracyAngle > 4){
+            
+            accuracyAngle = abs(accuracyAngle);
+            
+            if(accuracyAngle <= 100 && accuracyAngle > 30){
+                if (ship.speed < 1.5)
+                [ship runAction:[SKAction speedTo: ship.speed * 1.3 duration:0.2]];
+            }else if(accuracyAngle <= 30 && accuracyAngle > 20){
+                //no change in speed
+            }else if(accuracyAngle <= 20 && accuracyAngle > 15){
+                [ship runAction:[SKAction speedTo: ship.speed * 0.9 duration:0.2]];
+            }else if(accuracyAngle <= 15 && accuracyAngle > 12){
+                [ship runAction:[SKAction speedTo: ship.speed * 0.75 duration:0.2]];
+            }else if(accuracyAngle <= 12 && accuracyAngle > 10){
+                [ship runAction:[SKAction speedTo: ship.speed * 0.6 duration:0.2]];
+            }else if(accuracyAngle <= 10 && accuracyAngle > 8){
+                [ship runAction:[SKAction speedTo: ship.speed * 0.5 duration:0.2]];
+            }else if(accuracyAngle <= 8 && accuracyAngle > 6){
+                [ship runAction:[SKAction speedTo: ship.speed * 0.4 duration:0.2]];
+            }else if(accuracyAngle <= 6 && accuracyAngle > 4){
+                [ship runAction:[SKAction speedTo: ship.speed * 0.25 duration:0.2]];
+            }
+            
+        }else if(accuracyAngle < -4){
+            
+            accuracyAngle = abs(accuracyAngle);
+            
+            if(accuracyAngle <= 100 && accuracyAngle > 30){
+                if (ship.speed < 1.5)
+                [ship runAction:[SKAction speedTo: ship.speed * 1.3 duration:0.2]];
+            }else if(accuracyAngle <= 30 && accuracyAngle > 20){
+                //no change in speed
+            }else if(accuracyAngle <= 20 && accuracyAngle > 15){
+                [ship runAction:[SKAction speedTo: ship.speed * 0.9 duration:0.2]];
+            }else if(accuracyAngle <= 15 && accuracyAngle > 12){
+                [ship runAction:[SKAction speedTo: ship.speed * 0.75 duration:0.2]];
+            }else if(accuracyAngle <= 12 && accuracyAngle > 10){
+                [ship runAction:[SKAction speedTo: ship.speed * 0.6 duration:0.2]];
+            }else if(accuracyAngle <= 10 && accuracyAngle > 8){
+                [ship runAction:[SKAction speedTo: ship.speed * 0.5 duration:0.2]];
+            }else if(accuracyAngle <= 8 && accuracyAngle > 6){
+                [ship runAction:[SKAction speedTo: ship.speed * 0.4 duration:0.2]];
+            }else if(accuracyAngle <= 6 && accuracyAngle > 4){
+                [ship runAction:[SKAction speedTo: ship.speed * 0.25 duration:0.2]];
             }
             
         }
+        
     }
 }
 
@@ -619,13 +733,11 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
     [_planets addObject:_earth];
     
     _stopLightPlanet1 = [[Planet alloc] initWithSize:CGSizeMake(40,40) andPosition:CGPointMake(35, 120) andImage:@"blank_planet"];
-    _stopLightPlanet1._planetBody.colorBlendFactor = 1;
     [_backgroundLayer addChild:_stopLightPlanet1];
     CGRect stop1rect = CGRectMake(0, 80, 40*1.8, 40*1.8);
     [_planets addObject:_stopLightPlanet1];
     
     _stopLightPlanet2 = [[Planet alloc] initWithSize:CGSizeMake(40,40) andPosition:CGPointMake(_backgroundLayer.size.width-35, 120) andImage:@"blank_planet"];
-    _stopLightPlanet2._planetBody.colorBlendFactor = 1;
     [_backgroundLayer addChild:_stopLightPlanet2];
     CGRect stop2rect = CGRectMake(_backgroundLayer.size.width-80, 80, 40*1.8, 40*1.8);
     [_planets addObject:_stopLightPlanet2];
@@ -797,11 +909,13 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
 
 -(void) updateZRotation:(Ship *)ship
 {
-    ship._oldPos = ship._newPos;
-    ship._newPos = ship.position;
-    if ([_backgroundLayer convertPoint:ship.position toNode:self].y > 1 && [_backgroundLayer convertPoint:ship.position toNode:self].x > _backgroundLayer.position.x + 1 && [_backgroundLayer convertPoint:ship.position toNode:self].x < self.size.width - 1)
-        if( CGPointToAngle(CGPointSubtract(ship._newPos, ship._oldPos)) != 0 && CGPointToAngle(CGPointSubtract(ship._newPos, ship._oldPos)) != M_PI)
+    if (!_mainShip._dead){
+        ship._oldPos = ship._newPos;
+        ship._newPos = ship.position;
+
+        if( abs(CGPointToAngle(CGPointSubtract(ship._newPos, ship._oldPos)) - ship.zRotation) < M_PI_2*0.15 || abs(CGPointToAngle(CGPointSubtract(ship._newPos, ship._oldPos)) - ship.zRotation) - 2 * M_PI > - M_PI_2*0.15)
             ship.zRotation = CGPointToAngle(CGPointSubtract(ship._newPos, ship._oldPos));
+    }
 }
 
 -(void) removePlanets
@@ -834,7 +948,7 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
         //if ship position is greater than y = 0.4
         if ([_backgroundLayer convertPoint:_mainShip.position toNode:self].y > 0.3*self.size.height){
             //move backgroundlayer at speed relative to ships position and ships dy velocity
-            _backgroundLayer.position = CGPointMake(31, _backgroundLayer.position.y - ([_backgroundLayer convertPoint:_mainShip.position toNode:self].y - 0.3*self.size.height) / (0.1*self.size.height) * sin(_mainShip.zRotation)*NORMAL_SHIP_SPEED_PPS*_mainShip.speed * _dt);
+            _backgroundLayer.position = CGPointMake(32, _backgroundLayer.position.y - ([_backgroundLayer convertPoint:_mainShip.position toNode:self].y - 0.3*self.size.height) / (0.1*self.size.height) * sin(_mainShip.zRotation)*NORMAL_SHIP_SPEED_PPS*_mainShip.speed * _dt);
         }
         
         //if ship is on planet and game is started
@@ -843,15 +957,15 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
         //if planet position is greater than y = .5
         if ([_backgroundLayer convertPoint:_mainShip._currentPlanet.position toNode:self].y > 0.5*self.size.height){
             //move background layer down at ship speed
-            _backgroundLayer.position = CGPointMake(30, _backgroundLayer.position.y -NORMAL_SHIP_SPEED_PPS*_mainShip.speed * _dt);
+            _backgroundLayer.position = CGPointMake(32, _backgroundLayer.position.y -NORMAL_SHIP_SPEED_PPS*_mainShip.speed * _dt);
         //if planet is between y = .22 and y = .5 in scene coords
         }else if ([_backgroundLayer convertPoint:_mainShip._currentPlanet.position toNode:self].y <= 0.5*self.size.height && [_backgroundLayer convertPoint:_mainShip._currentPlanet.position toNode:self].y > 0.22*self.size.height){
             //move backgroundLayer down at a fraction of mainship's speed relative to the planets position
-            _backgroundLayer.position = CGPointMake(30, _backgroundLayer.position.y - ([_backgroundLayer convertPoint:_mainShip._currentPlanet.position toNode:self].y - 0.28*self.size.height) / (0.2*self.size.height) * NORMAL_SHIP_SPEED_PPS * _mainShip.speed * _dt);
+            _backgroundLayer.position = CGPointMake(32, _backgroundLayer.position.y - ([_backgroundLayer convertPoint:_mainShip._currentPlanet.position toNode:self].y - 0.28*self.size.height) / (0.2*self.size.height) * NORMAL_SHIP_SPEED_PPS * _mainShip.speed * _dt);
         //if planet is between y = .2 and y = .22
         }else if ([_backgroundLayer convertPoint:_mainShip._currentPlanet.position toNode:self].y <= 0.22*self.size.height && [_backgroundLayer convertPoint:_mainShip._currentPlanet.position toNode:self].y > 0.2*self.size.height){
             //move backgroundLayer down at small fraction of the ship speed
-            _backgroundLayer.position = CGPointMake(30, _backgroundLayer.position.y - .02/.2 * NORMAL_SHIP_SPEED_PPS * _mainShip.speed * _dt);
+            _backgroundLayer.position = CGPointMake(32, _backgroundLayer.position.y - .02/.2 * NORMAL_SHIP_SPEED_PPS * _mainShip.speed * _dt);
         }
     }
 
@@ -870,7 +984,7 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
         }
         
         //if ship is bellow screen
-        if ( [_backgroundLayer convertPoint:ship.position toNode:self].y < 0){
+        if (ship == _mainShip && [_backgroundLayer convertPoint:ship.position toNode:self].y < 0){
             //flip ship over line x = .5
             ship.position = CGPointMake(_backgroundLayer.size.width - ship.position.x, [self convertPoint:CGPointMake(0,1) toNode:_backgroundLayer].y);
             
@@ -907,8 +1021,13 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
     [_recordNumLabel runAction:fadeLabel2];
     [_mileNumLabel runAction:[fadeLabel reversedAction]];
     [_milesLabel runAction:[fadeLabel reversedAction]];
-    [_progressBar runAction:[fadeLabel reversedAction]];
     [_pauseButton runAction:[fadeLabel reversedAction]];
+    
+    SKAction *unfadeProgressBar = [SKAction fadeAlphaBy:1 duration:0.5];
+    if ([_gameMode isEqualToString: @"race"])
+        [_raceProgressBar runAction:unfadeProgressBar];
+    else if([_gameMode isEqualToString:@"black_hole"])
+        [_blackHoleProgressBar runAction:unfadeProgressBar];
     
     //run the actions to scale _backgroundLayer and _background out
     [_backgroundLayer scaleOut];
@@ -932,31 +1051,31 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
 
 -(void) openDeadMenu
 {
-    CGPoint shipPosToTopLeftVector = CGPointSubtract(CGPointMake(30, self.size.height-35), [_backgroundLayer convertPoint:_mainShip.position toNode:self]);
+    CGPoint shipPosToTopLeftVector = CGPointSubtract(CGPointMake(30, self.size.height), [_backgroundLayer convertPoint:_mainShip.position toNode:self]);
     
     _deadMenu = [SKSpriteNode spriteNodeWithImageNamed:@"pause_death_screen"];
-    _deadMenu.anchorPoint = CGPointMake(_mainShip.position.x/_backgroundLayer.size.width, [_backgroundLayer convertPoint:_mainShip.position toNode:self].y/(self.size.height-35));
+    _deadMenu.size = CGSizeMake(_backgroundLayer.size.width, self.size.height);
+    _deadMenu.anchorPoint = CGPointMake(_mainShip.position.x/_backgroundLayer.size.width, [_backgroundLayer convertPoint:_mainShip.position toNode:self].y/_deadMenu.size.height);
     _deadMenu.position = [_backgroundLayer convertPoint:_mainShip.position toNode:self];
-    _deadMenu.size = CGSizeMake(_backgroundLayer.size.width, self.size.height-35);
     _deadMenu.xScale = 0;
     _deadMenu.yScale = 0;
     
     _mainMenuButton = [SKSpriteNode spriteNodeWithImageNamed:@"main_menu_button"];
-    _mainMenuButton.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(_backgroundLayer.size.width*0.5, -(self.size.height-35)*0.80));
+    _mainMenuButton.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(_backgroundLayer.size.width*0.5, -(self.size.height)*0.80));
     _mainMenuButton.size = CGSizeMake(_backgroundLayer.size.width*0.6, 0.25*_backgroundLayer.size.width*0.6);
     [_deadMenu addChild:_mainMenuButton];
     
     //[self createDeadShipsImage];
     _deadShips = [SKSpriteNode spriteNodeWithImageNamed:@"venus"];
     _deadShips.size = CGSizeMake(30, 30);
-    _deadShips.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(_backgroundLayer.size.width*0.5, -(self.size.height-35)*0.68));
+    _deadShips.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(_backgroundLayer.size.width*0.5, -(self.size.height-35)*0.72));
     [_deadMenu addChild:_deadShips];
     
     [self removeChildrenInArray:@[_recordLabel, _recordNumLabel]];
     _recordLabel.alpha = 1;
     _recordNumLabel.alpha = 1;
-    _recordLabel.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(_backgroundLayer.size.width*0.5, -(self.size.height-35)*0.52));
-    _recordNumLabel.position = CGPointAdd(shipPosToTopLeftVector,CGPointMake(_backgroundLayer.size.width*0.5, -(self.size.height-35)*0.52 - 10));
+    _recordLabel.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(_backgroundLayer.size.width*0.5, -(self.size.height)*0.52));
+    _recordNumLabel.position = CGPointAdd(shipPosToTopLeftVector,CGPointMake(_backgroundLayer.size.width*0.5, -(self.size.height)*0.52 - 10));
     _recordLabel.fontSize = 30;
     _recordNumLabel.fontSize = 30;
     [_deadMenu addChild:_recordLabel];
@@ -971,7 +1090,7 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
     
     _mileNumLabel.text = (_miles == 1) ? [NSString stringWithFormat:@"%i mile", _miles]: [NSString stringWithFormat:@"%i miles", _miles];
 //    _mileNumLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeTop;
-    _mileNumLabel.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(_backgroundLayer.size.width*0.5, -(self.size.height-35)*0.35 - 10));
+    _mileNumLabel.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(_backgroundLayer.size.width*0.5, -(self.size.height)*0.35 - 10));
     [self removeChildrenInArray:@[_mileNumLabel]];
     [_deadMenu addChild:_mileNumLabel];
     
@@ -985,7 +1104,7 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
         _recordNumLabel.alpha = 0;
         _recordLabel.text = @"New Record!";
         _recordLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
-        _recordLabel.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(_backgroundLayer.size.width*0.5, -(self.size.height-35)*0.5));
+        _recordLabel.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(_backgroundLayer.size.width*0.5, -(self.size.height)*0.5));
         SKAction *pulse = [SKAction scaleBy: 1.1 duration:0.5];
         pulse.timingMode = SKActionTimingEaseInEaseOut;
         [_recordLabel runAction:[SKAction repeatActionForever:[SKAction sequence:@[pulse, [pulse reversedAction]]]]];
@@ -997,8 +1116,6 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
     presentDeadMenu.timingMode = SKActionTimingEaseOut;
     [_deadMenu runAction:presentDeadMenu];
 }
-
-//test these methods, change create aliveshipimage and deadshipimage to random images to place on screen
 
 -(void) openPausedMenu
 {
@@ -1047,6 +1164,68 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
     SKAction *presentPauseMenu = [SKAction scaleTo:1 duration:0.4];
     presentPauseMenu.timingMode = SKActionTimingEaseOut;
     [_pauseMenu runAction:presentPauseMenu];
+}
+
+-(void) adjustProgressBars
+{
+    if ( !_mainShip._dead && [_gameMode isEqualToString:@"race"]){
+        if (!_noMoreProgressBarUpdates){
+            //if returns yes, mainship is above next checkpoint
+            if ([_raceProgressBar adjustProgressBars_nextCheckPoint:_nextCheckP yellowPos:_yellowShip.position.y redPos:_redShip.position.y mainPos:_mainShip.position.y greenPos:_greenShip.position.y bluePos:_blueShip.position.y])
+            {
+                if (_nextCheckP == _checkPoint2)
+                    _nextCheckP = _checkPoint3;
+                if (_nextCheckP == _checkPoint3)
+                    _nextCheckP = _checkPoint4;
+                if (_nextCheckP == _checkPoint4)
+                    _noMoreProgressBarUpdates = YES;
+            }
+        }
+    }else if ([_gameMode isEqualToString:@"black_hole"]){
+        [_blackHoleProgressBar adjustBlackHoleProgressBar_mainShipPos:_mainShip.position _blackHolePos:_blackHole.position];
+        _blackHoleTrail.size = CGSizeMake(_backgroundLayer.size.width, _blackHole.position.y);
+    }
+}
+
+-(void) checkShipDeath
+{
+    if(_gameStarted == YES){
+        if ([_gameMode isEqualToString:@"race"])
+        {
+            
+        } else if ([_gameMode isEqualToString:@"black_hole"])
+        {
+            if (_mainShip.position.y < _blackHole.position.y + _blackHole.size.height/2 && !_mainShip._dead)
+            {
+                NSLog(@"dead!");
+                _mainShip._dead = YES;
+                if (_miles > _highScore){
+                    _newHighScore = YES;
+                    _highScore = _miles;
+                }
+                
+                if([_gameMode isEqualToString:@"race"])
+                {
+                    _yellowShip.paused = YES;
+                    _redShip.paused = YES;
+                    _greenShip.paused = YES;
+                    _blueShip.paused = YES;
+                }else if ([_gameMode isEqualToString:@"black_hole"])
+                {
+
+                }
+                
+                [_blackHoleProgressBar killShip];
+                
+                [_mainShip removeAllActions];
+                [_mainShip runAction: [SKAction group:@[[SKAction rotateByAngle:6*M_PI duration:2], [SKAction moveTo:CGPointMake(_blackHole.position.x+_blackHole.size.width/2, _blackHole.position.y+2*STARTING_BLACK_HOLE_SPEED_PPS*_blackHole.speed) duration:2],[SKAction scaleTo:0 duration:2]]]];
+                [self runAction: [SKAction waitForDuration:2] completion:^{
+                    [self openDeadMenu];
+                }];
+                
+            }
+        }
+    }
 }
 
 //
