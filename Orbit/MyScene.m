@@ -50,6 +50,7 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
     CFTimeInterval _lastUpdateTime;
     NSTimeInterval _dt;
     int _record;
+    SKSpriteNode *_blackHoleMenuTrail;
     SKLabelNode *_orbitLabel;
     SKLabelNode *_recordLabel;
     SKLabelNode *_recordNumLabel;
@@ -173,14 +174,13 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
         _orbitLabel.text = @"Orbit";
         _orbitLabel.fontSize = 60;
         _orbitLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
-        _orbitLabel.position = CGPointMake(self.size.width*0.5, 0.9*self.size.height);
-        
+        _orbitLabel.position = CGPointMake(_contentNode.size.width*0.5, 0.9*_contentNode.size.height);
         
         _blackHoleRunLabel = [SKLabelNode labelNodeWithFontNamed:@"Hemi Head"];
         _blackHoleRunLabel.text = @"Black Hole Run";
         _blackHoleRunLabel.fontSize = 35;
         _blackHoleRunLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
-        _blackHoleRunLabel.position = CGPointMake(self.size.width*0.5, 0.8*self.size.height);
+        _blackHoleRunLabel.position = CGPointMake(_contentNode.size.width*0.5, 0.8*_contentNode.size.height);
         
         _recordColor = [UIColor redColor];
         //set up record label
@@ -188,7 +188,7 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
         _recordLabel.text = @"Record:";
         _recordLabel.fontSize = 30;
         _recordLabel.fontColor = _recordColor;
-        _recordLabel.position = CGPointMake(self.size.width*0.5, 0.15*self.size.height);
+        _recordLabel.position = CGPointMake(_contentNode.size.width*0.5, 0.15*_contentNode.size.height);
         _recordNumLabel = [SKLabelNode labelNodeWithFontNamed:@"Hemi Head"];
         _recordNumLabel.text = (_record == 1) ? [NSString stringWithFormat:@"%i LIGHT YEAR", _record]: [NSString stringWithFormat:@"%i LIGHT YEARS", _record];
         _recordNumLabel.fontSize = 30;
@@ -203,7 +203,7 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
         //set up pause button node
         _pauseButton = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImageNamed:@"pause_button"] size:CGSizeMake(48, 30)];
         _pauseButton.anchorPoint = CGPointMake(0, 1);
-        _pauseButton.position = CGPointMake(0, self.size.height);
+        _pauseButton.position = CGPointMake(0, _contentNode.size.height);
         _pauseButton.alpha = 0;
         
         //set up miles counter
@@ -213,18 +213,18 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
         _mileNumLabel.text = [NSString stringWithFormat:@"%i", _miles];
         _mileNumLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
         _mileNumLabel.fontSize = 35;
-        _mileNumLabel.position = CGPointMake(self.size.width*0.5, self.size.height-17.5);
+        _mileNumLabel.position = CGPointMake(_contentNode.size.width*0.5, _contentNode.size.height-17.5);
         _mileNumLabel.alpha = 0;
         _milesLabel = [SKLabelNode labelNodeWithFontNamed:@"Hemi Head"];
         _milesLabel.text = @"LIGHT YEARS";
         _milesLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
         _milesLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeRight;
         _milesLabel.fontSize = 15;
-        _milesLabel.position = CGPointMake(self.size.width-5, _mileNumLabel.position.y);
+        _milesLabel.position = CGPointMake(_contentNode.size.width-5, _mileNumLabel.position.y);
         _milesLabel.alpha = 0;
-        _milesBarBg = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImageNamed:@"miles_bar_background"] size:CGSizeMake(self.size.width, 39)];
+        _milesBarBg = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImageNamed:@"miles_bar_background"] size:CGSizeMake(_contentNode.size.width, 39)];
         _milesBarBg.anchorPoint = CGPointMake(0, 1);
-        _milesBarBg.position = CGPointMake(0, self.size.height+1);
+        _milesBarBg.position = CGPointMake(0, _contentNode.size.height+1);
         _milesBarBg.alpha = 0;
         
         
@@ -277,7 +277,7 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
     _clickNum++;
     
     //if pause button is pressed
-    if (!_paused && !_mainShip._dead && CGRectContainsPoint(CGRectMake(0, self.size.height-30, 48, 30), location)) {
+    if (!_paused && !_mainShip._dead && CGRectContainsPoint(CGRectMake(0, _contentNode.size.height-30, 48, 30), location)) {
         
         [self pauseScene];
         
@@ -317,7 +317,7 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
 
     
     //if game is in play and _mainShip has a current planet
-    }else if(_gameStarted && CGRectContainsPoint(CGRectMake(32, 0, _backgroundLayer.size.width, self.size.height - 35), location))
+    }else if(_gameStarted && CGRectContainsPoint(CGRectMake(32, 0, _backgroundLayer.size.width, _contentNode.size.height - 35), location))
     {
         _touching = YES;
         
@@ -337,7 +337,7 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
     UITouch *touch = [touches anyObject];
     CGPoint location = [touch locationInNode:self];
     
-    if(_gameStarted && CGRectContainsPoint(CGRectMake(32, 0, _backgroundLayer.size.width, self.size.height - 35), location) && _mainShip._currentPlanet)
+    if(_gameStarted && CGRectContainsPoint(CGRectMake(32, 0, _backgroundLayer.size.width, _contentNode.size.height - 35), location) && _mainShip._currentPlanet)
     {
         _touching = NO;
         
@@ -494,6 +494,8 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
     if(contact.bodyB.categoryBitMask == CNPhysicsCategoryPlanetBody){
         
         Ship *ship = (Ship *)contact.bodyA.node;
+        
+        ship._currentPlanet = (Planet *)contact.bodyB.node.parent;
         
         //set the planet to ship angle to a number between 0 and 2PI
         ship._planetToShipAngle = CGPointToAngle(CGPointSubtract(ship.position, ship._currentPlanet.position));
@@ -787,13 +789,14 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
 
 -(void) updateZRotation:(Ship *)ship
 {
-    if (!_mainShip._dead && ship._currentPlanet){
-        ship._oldPos = ship._newPos;
-        ship._newPos = ship.position;
+    ship._oldPos = ship._newPos;
+    ship._newPos = ship.position;
+    
+    if (!_mainShip._dead && ship._hasEntered){
         
         float newAngle = CGPointToAngle(CGPointSubtract(ship.position, ship._oldPos));
 
-            ship.zRotation = newAngle;
+        ship.zRotation = newAngle;
     }
 }
 
@@ -907,7 +910,7 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
 -(void) zoomOut
 {
     _goLabel = [SKLabelNode labelNodeWithFontNamed:@"Hemi Head"];
-    _goLabel.position = CGPointMake(_backgroundLayer.size.width/4+32, (self.size.height-30)*0.45);
+    _goLabel.position = CGPointMake(_backgroundLayer.size.width/4+32, (_contentNode.size.height-30)*0.45);
     _goLabel.text = @"Go!";
     _goLabel.fontSize = 50;
     _goLabel.alpha = 0;
@@ -979,25 +982,25 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
         _record = _miles;
     }
     
-    CGPoint shipPosToTopLeftVector = CGPointSubtract(CGPointMake(0, self.size.height), CGPointMake(_mainShip.position.x + 32, _backgroundLayer.position.y + _mainShip.position.y));
+    CGPoint shipPosToTopLeftVector = CGPointSubtract(CGPointMake(0, _contentNode.size.height), CGPointMake(_mainShip.position.x + 32, _backgroundLayer.position.y + _mainShip.position.y));
     _deadMenu = [SKSpriteNode spriteNodeWithImageNamed:@"pause_death_screen"];
-    _deadMenu.size = CGSizeMake(self.size.width, self.size.height);
-    _deadMenu.anchorPoint = CGPointMake((_mainShip.position.x+32)/self.size.width, (_backgroundLayer.position.y + _mainShip.position.y)/self.size.height);
+    _deadMenu.size = CGSizeMake(_contentNode.size.width, _contentNode.size.height);
+    _deadMenu.anchorPoint = CGPointMake((_mainShip.position.x+32)/_contentNode.size.width, (_backgroundLayer.position.y + _mainShip.position.y)/_contentNode.size.height);
     _deadMenu.position = CGPointMake(_mainShip.position.x + 32, _backgroundLayer.position.y + _mainShip.position.y);
     _deadMenu.xScale = 0;
     _deadMenu.yScale = 0;
     _deadMenu.zPosition  = 200;
     
     _mainMenuButton = [SKSpriteNode spriteNodeWithImageNamed:@"main_menu_button"];
-    _mainMenuButton.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(self.size.width*0.5, -(self.size.height)*0.83));
-    _mainMenuButton.size = CGSizeMake(self.size.width*0.6, 0.25*self.size.width*0.6);
+    _mainMenuButton.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(_contentNode.size.width*0.5, -(_contentNode.size.height)*0.83));
+    _mainMenuButton.size = CGSizeMake(_contentNode.size.width*0.6, 0.25*_contentNode.size.width*0.6);
     
 
     [self removeChildrenInArray:@[_recordLabel, _recordNumLabel, _milesLabel]];
     _recordLabel.alpha = 1;
     _recordNumLabel.alpha = 1;
-    _recordLabel.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(self.size.width*0.5, -(self.size.height)*0.52));
-    _recordNumLabel.position = CGPointAdd(shipPosToTopLeftVector,CGPointMake(self.size.width*0.5, -(self.size.height)*0.52 - 10));
+    _recordLabel.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(_contentNode.size.width*0.5, -(_contentNode.size.height)*0.52));
+    _recordNumLabel.position = CGPointAdd(shipPosToTopLeftVector,CGPointMake(_contentNode.size.width*0.5, -(_contentNode.size.height)*0.52 - 10));
     _recordLabel.fontSize = 30;
     _recordNumLabel.fontSize = 30;
 
@@ -1005,14 +1008,14 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
 //    _yourScore = [SKLabelNode labelNodeWithFontNamed:@"Hemi Head"];
 //    _yourScore.text = @"Your score:";
 //    _yourScore.fontSize = 30;
-//    _yourScore.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(self.size.width*0.5, -(self.size.height-35)*0.35));
+//    _yourScore.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(_contentNode.size.width*0.5, -(_contentNode.size.height-35)*0.35));
 //    [_deadMenu addChild:_yourScore];
     
     
     _mileNumLabel.text = (_miles == 1) ? [NSString stringWithFormat:@"%i LIGHT YEAR", _miles]: [NSString stringWithFormat:@"%i LIGHT YEARS", _miles];
     _mileNumLabel.fontSize = 30;
 //    _mileNumLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeTop;
-    _mileNumLabel.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(self.size.width*0.5, -(self.size.height)*0.35 - 10));
+    _mileNumLabel.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(_contentNode.size.width*0.5, -(_contentNode.size.height)*0.35 - 10));
     [self removeChildrenInArray:@[_mileNumLabel]];
     
     
@@ -1021,7 +1024,7 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
         _recordNumLabel.alpha = 0;
         _recordLabel.text = @"New Record!";
         _recordLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
-        _recordLabel.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(self.size.width*0.5, -(self.size.height)*0.5));
+        _recordLabel.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(_contentNode.size.width*0.5, -(_contentNode.size.height)*0.5));
         
         //To insert the data into the plist
         [_data setObject:[NSNumber numberWithInt:_record] forKey:@"record"];
@@ -1039,16 +1042,16 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
         //[self createDeadShipsImage];
         _deadShips = [SKSpriteNode spriteNodeWithImageNamed:@"venus"];
         _deadShips.size = CGSizeMake(30, 30);
-        _deadShips.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(self.size.width*0.5, -(self.size.height)*0.68));
+        _deadShips.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(_contentNode.size.width*0.5, -(_contentNode.size.height)*0.68));
         
         //[self createAliveShipsImage];
         _aliveShips = [SKSpriteNode spriteNodeWithImageNamed:@"sun"];
         _aliveShips.size = CGSizeMake(30,30);
-        _aliveShips.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(self.size.width*0.5, -(self.size.height)*0.2));
+        _aliveShips.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(_contentNode.size.width*0.5, -(_contentNode.size.height)*0.2));
         
     }else if ([_gameMode isEqualToString:@"black_hole"])
     {
-        [_blackHole runAction:[SKAction group:@[[SKAction moveToX:-32 duration:0.5], [SKAction scaleXTo:self.size.width/_backgroundLayer.size.width y:1 duration:0.5]]]];
+        [_blackHole runAction:[SKAction group:@[[SKAction moveToX:-32 duration:0.5], [SKAction scaleXTo:_contentNode.size.width/_backgroundLayer.size.width y:1 duration:0.5]]]];
         [_blackHoleTrail runAction:[SKAction moveToX:-32 duration:0.5]];
         
         [_blackHoleProgressBar runAction:[SKAction fadeAlphaTo:0 duration:0.5]];
@@ -1059,13 +1062,13 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
         
         _deadShips = [SKSpriteNode spriteNodeWithImageNamed:@"main_ship_rubble"];
         _deadShips.size = CGSizeMake(50, 50);
-        _deadShips.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(self.size.width*0.5, -(self.size.height)*0.68));
+        _deadShips.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(_contentNode.size.width*0.5, -(_contentNode.size.height)*0.68));
         
         _aliveShips = [SKSpriteNode spriteNodeWithImageNamed:@"black_hole"];
         _aliveShips.size = CGSizeMake(70, 70);
-        _aliveShips.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(self.size.width*0.5, -(self.size.height)*0.2));
+        _aliveShips.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(_contentNode.size.width*0.5, -(_contentNode.size.height)*0.2));
         
-        SKSpriteNode *_blackHoleMenuTrail = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImageNamed:@"black_hole_menu_trail"] size:CGSizeMake(92, self.size.height*0.63)];
+        _blackHoleMenuTrail = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImageNamed:@"black_hole_menu_trail"] size:CGSizeMake(92, _contentNode.size.height*0.63)];
         _blackHoleMenuTrail.anchorPoint = CGPointMake(0.5, 1);
         _blackHoleMenuTrail.position = _aliveShips.position;
         [_deadMenu addChild:_blackHoleMenuTrail];
@@ -1093,17 +1096,17 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
     
     _pauseMenu = [SKSpriteNode spriteNodeWithImageNamed:@"pause_death_screen"];
     _pauseMenu.anchorPoint = CGPointMake(0, 1);
-    _pauseMenu.position = CGPointMake(30, self.size.height-35);
-    _pauseMenu.size = CGSizeMake(_backgroundLayer.size.width, self.size.height-35);
+    _pauseMenu.position = CGPointMake(30, _contentNode.size.height-35);
+    _pauseMenu.size = CGSizeMake(_backgroundLayer.size.width, _contentNode.size.height-35);
     _pauseMenu.xScale = 0;
     _pauseMenu.yScale = 0;
     _pauseMenu.zPosition = 200;
     
     _resumeButton = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImageNamed:@"resume_button"] size: CGSizeMake(_backgroundLayer.size.width*.45, 0.33*_backgroundLayer.size.width*.45) ];
-    _resumeButton.position = CGPointMake(_backgroundLayer.size.width*0.5, -(self.size.height-35)*0.57);
+    _resumeButton.position = CGPointMake(_backgroundLayer.size.width*0.5, -(_contentNode.size.height-35)*0.57);
     
     _mainMenuButton = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImageNamed:@"main_menu_button"] size: CGSizeMake(_backgroundLayer.size.width*0.6, 0.25*_backgroundLayer.size.width*0.6) ];
-    _mainMenuButton.position = CGPointMake(_backgroundLayer.size.width*0.5, -(self.size.height-35)*0.68);
+    _mainMenuButton.position = CGPointMake(_backgroundLayer.size.width*0.5, -(_contentNode.size.height-35)*0.68);
     
     [self removeChildrenInArray:@[_recordLabel, _recordNumLabel]];
     
@@ -1118,8 +1121,8 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
     
     _recordLabel.alpha = 1;
     _recordNumLabel.alpha = 1;
-    _recordLabel.position = CGPointMake(_backgroundLayer.size.width*0.5, -(self.size.height-35)*0.80);
-    _recordNumLabel.position = CGPointMake(_backgroundLayer.size.width*0.5, -(self.size.height-35)*0.80 - 20);
+    _recordLabel.position = CGPointMake(_backgroundLayer.size.width*0.5, -(_contentNode.size.height-35)*0.80);
+    _recordNumLabel.position = CGPointMake(_backgroundLayer.size.width*0.5, -(_contentNode.size.height-35)*0.80 - 20);
     _recordNumLabel.fontSize = 25;
     _recordLabel.fontSize = 30;
     
@@ -1130,25 +1133,25 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
         //[self createDeadShipsImage];
         _deadShips = [SKSpriteNode spriteNodeWithImageNamed:@"venus"];
         _deadShips.size = CGSizeMake(30, 30);
-        _deadShips.position = CGPointMake(_backgroundLayer.size.width*0.5, -(self.size.height-35)*0.4);
+        _deadShips.position = CGPointMake(_backgroundLayer.size.width*0.5, -(_contentNode.size.height-35)*0.4);
         
         //[self createAliveShipsImage];
         _aliveShips = [SKSpriteNode spriteNodeWithImageNamed:@"sun"];
         _aliveShips.size = CGSizeMake(30,30);
-        _aliveShips.position = CGPointMake(_backgroundLayer.size.width*0.5, -(self.size.height-35)*0.22);
+        _aliveShips.position = CGPointMake(_backgroundLayer.size.width*0.5, -(_contentNode.size.height-35)*0.22);
         
     }else if ([_gameMode isEqualToString:@"black_hole"])
     {
         
         _deadShips = [SKSpriteNode spriteNodeWithImageNamed:@"black_hole"];
         _deadShips.size = CGSizeMake(70, 70);
-        _deadShips.position = CGPointMake(_backgroundLayer.size.width*0.5, -(self.size.height-35)*0.4);
+        _deadShips.position = CGPointMake(_backgroundLayer.size.width*0.5, -(_contentNode.size.height-35)*0.4);
         
         _aliveShips = [SKSpriteNode spriteNodeWithImageNamed:@"main_ship_trail"];
         _aliveShips.size = CGSizeMake(30, 90);
-        _aliveShips.position = CGPointMake(_backgroundLayer.size.width*0.5, -(self.size.height-35)*0.22);
+        _aliveShips.position = CGPointMake(_backgroundLayer.size.width*0.5, -(_contentNode.size.height-35)*0.22);
         
-        SKSpriteNode *_blackHoleMenuTrail = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImageNamed:@"black_hole_menu_trail"] size:CGSizeMake(92, self.size.height*0.48)];
+        _blackHoleMenuTrail = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImageNamed:@"black_hole_menu_trail"] size:CGSizeMake(92, _contentNode.size.height*0.48)];
         _blackHoleMenuTrail.anchorPoint = CGPointMake(0.5, 1);
         _blackHoleMenuTrail.position = _deadShips.position;
         [_pauseMenu addChild:_blackHoleMenuTrail];
@@ -1304,17 +1307,17 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
 
 -(void) setUpBlackHoleGame
 {
-    _blackHoleProgressBar = [[BlackHoleProgressBar alloc] initWithScreenSize:self.size _recordPos:400+300*_record];
+    _blackHoleProgressBar = [[BlackHoleProgressBar alloc] initWithScreenSize:_contentNode.size _recordPos:400+300*_record];
     _blackHoleProgressBar.alpha = 0;
     [self addChild:_blackHoleProgressBar];
     
     //(width set as such due to _backgroundLayer's scale of 2)
     _blackHole = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImageNamed:@"black_hole_squished"] size:CGSizeMake(_backgroundLayer.size.width/2, _backgroundLayer.size.width/4)];
     _blackHole.anchorPoint = CGPointMake(0, 0.5);
-    _blackHole.position = CGPointMake(0, -self.size.height);
+    _blackHole.position = CGPointMake(0, -_contentNode.size.height);
     _blackHole.alpha = 0;
     
-    _blackHoleTrail = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImageNamed:@"black_hole_screen_trail"] size:CGSizeMake(self.size.width, 6000)];
+    _blackHoleTrail = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImageNamed:@"black_hole_screen_trail"] size:CGSizeMake(_contentNode.size.width, 6000)];
     _blackHoleTrail.anchorPoint = CGPointMake(0, 1);
     _blackHoleTrail.position = _blackHole.position;
     
@@ -2370,13 +2373,74 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
     }
     _contentNode.size = CGSizeMake(self.size.width, self.size.height - banner.frame.size.height);
     NSLog(@"%f", _contentNode.size.height);
-    //        if(!_gameStarted){
-    //            _orbitLabel.position = CGPointMake(self.size.width*0.5, 0.9*_contentHeight);
-    //            _blackHoleRunLabel.position = CGPointMake(self.size.width*0.5, 0.8*_contentHeight);
-    //            _recordLabel.position = CGPointMake(self.size.width*0.5, 0.2*_contentHeight);
-    //            _mileNumLabel.position = CGPointMake(self.size.width*0.5, _contentHeight-17.5);
-    //            _milesBarBg.position = CGPointMake(0, _contentHeight+1);
-    //        }
+    
+
+    if (!_gameStarted)
+    {
+        _orbitLabel.position = CGPointMake(_contentNode.size.width*0.5, 0.9*_contentNode.size.height);
+        _blackHoleRunLabel.position = CGPointMake(_contentNode.size.width*0.5, 0.8*_contentNode.size.height);
+        _recordLabel.position = CGPointMake(_contentNode.size.width*0.5, 0.15*_contentNode.size.height);
+        _recordNumLabel.position = CGPointMake(_recordLabel.position.x, _recordLabel.position.y - 10);
+        _mileNumLabel.position = CGPointMake(_contentNode.size.width*0.5, _contentNode.size.height-17.5);
+        _pauseButton.position = CGPointMake(0, _contentNode.size.height);
+        _milesBarBg.position = CGPointMake(0, _contentNode.size.height+1);
+        _milesLabel.position = CGPointMake(_contentNode.size.width-5, _mileNumLabel.position.y);
+        
+    }else
+    {
+        _mileNumLabel.position = CGPointMake(_contentNode.size.width*0.5, _contentNode.size.height-17.5);
+        _pauseButton.position = CGPointMake(0, _contentNode.size.height);
+        _milesBarBg.position = CGPointMake(0, _contentNode.size.height+1);
+        _milesLabel.position = CGPointMake(_contentNode.size.width-5, _mileNumLabel.position.y);
+        _mileNumLabel.position = CGPointMake(_contentNode.size.width*0.5, _contentNode.size.height-17.5);
+        
+        if ([_gameMode isEqualToString:@"black_hole"])
+        {
+            [_blackHoleProgressBar resizeWithScreenSize:_contentNode.size];
+            _blackHoleLabel.position = CGPointMake(_backgroundLayer.size.width/4,45);
+            
+        }
+    }
+    if(_paused)
+    {
+        _pauseMenu.position = CGPointMake(30, _contentNode.size.height-35);
+        _pauseMenu.size = CGSizeMake(_backgroundLayer.size.width, _contentNode.size.height-35);
+        _resumeButton.position = CGPointMake(_backgroundLayer.size.width*0.5, -(_contentNode.size.height-35)*0.57);
+        _mainMenuButton.position = CGPointMake(_backgroundLayer.size.width*0.5, -(_contentNode.size.height-35)*0.68);
+        _recordLabel.position = CGPointMake(_backgroundLayer.size.width*0.5, -(_contentNode.size.height-35)*0.80);
+        _recordNumLabel.position = CGPointMake(_backgroundLayer.size.width*0.5, -(_contentNode.size.height-35)*0.80 - 20);
+        _deadShips.position = CGPointMake(_backgroundLayer.size.width*0.5, -(_contentNode.size.height-35)*0.4);
+        _aliveShips.position = CGPointMake(_backgroundLayer.size.width*0.5, -(_contentNode.size.height-35)*0.22);
+        _blackHoleMenuTrail.size = CGSizeMake(92, _contentNode.size.height*0.48);
+        _blackHoleMenuTrail.position = _aliveShips.position;
+        
+    }
+    if(_mainShip._dead)
+    {
+        CGPoint shipPosToTopLeftVector = CGPointSubtract(CGPointMake(0, _contentNode.size.height), CGPointMake(_mainShip.position.x + 32, _backgroundLayer.position.y + _mainShip.position.y));
+        _deadMenu.size = CGSizeMake(_contentNode.size.width, _contentNode.size.height);
+        _deadMenu.anchorPoint = CGPointMake((_mainShip.position.x+32)/_contentNode.size.width, (_backgroundLayer.position.y + _mainShip.position.y)/_contentNode.size.height);
+        _deadMenu.position = CGPointMake(_mainShip.position.x + 32, _backgroundLayer.position.y + _mainShip.position.y);
+        _mainMenuButton.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(_contentNode.size.width*0.5, -(_contentNode.size.height)*0.83));
+        _mainMenuButton.size = CGSizeMake(_contentNode.size.width*0.6, 0.25*_contentNode.size.width*0.6);
+        _recordLabel.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(_contentNode.size.width*0.5, -(_contentNode.size.height)*0.52));
+        _mainMenuButton.size = CGSizeMake(_contentNode.size.width*0.6, 0.25*_contentNode.size.width*0.6);
+        _recordLabel.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(_contentNode.size.width*0.5, -(_contentNode.size.height)*0.52));
+        _recordNumLabel.position = CGPointAdd(shipPosToTopLeftVector,CGPointMake(_contentNode.size.width*0.5, -(_contentNode.size.height)*0.52 - 10));
+        _mileNumLabel.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(_contentNode.size.width*0.5, -(_contentNode.size.height)*0.35 - 10));
+        if(_newHighScore)
+        {
+            _recordLabel.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(_contentNode.size.width*0.5, -(_contentNode.size.height)*0.5));
+        }
+        if ([_gameMode isEqualToString:@"black_hole"])
+        {
+            
+            _deadShips.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(_contentNode.size.width*0.5, -(_contentNode.size.height)*0.68));
+            _aliveShips.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(_contentNode.size.width*0.5, -(_contentNode.size.height)*0.2));
+            _blackHoleMenuTrail.size = CGSizeMake(92, _contentNode.size.height*0.63);
+            _blackHoleMenuTrail.position = _aliveShips.position;
+        }
+    }
 
 }
 
@@ -2398,5 +2462,74 @@ static const float NORMAL_SHIP_SPEED_PPS = 60;
     
     _contentNode.size = CGSizeMake(self.size.width, self.size.height);
     NSLog(@"%f", _contentNode.size.height);
+    
+
+    if (!_gameStarted)
+    {
+        _orbitLabel.position = CGPointMake(_contentNode.size.width*0.5, 0.9*_contentNode.size.height);
+        _blackHoleRunLabel.position = CGPointMake(_contentNode.size.width*0.5, 0.8*_contentNode.size.height);
+        _recordLabel.position = CGPointMake(_contentNode.size.width*0.5, 0.15*_contentNode.size.height);
+        _recordNumLabel.position = CGPointMake(_recordLabel.position.x, _recordLabel.position.y - 10);
+        _mileNumLabel.position = CGPointMake(_contentNode.size.width*0.5, _contentNode.size.height-17.5);
+        _pauseButton.position = CGPointMake(0, _contentNode.size.height);
+        _milesBarBg.position = CGPointMake(0, _contentNode.size.height+1);
+        _milesLabel.position = CGPointMake(_contentNode.size.width-5, _mileNumLabel.position.y);
+        
+    }else
+    {
+        _mileNumLabel.position = CGPointMake(_contentNode.size.width*0.5, _contentNode.size.height-17.5);
+        _pauseButton.position = CGPointMake(0, _contentNode.size.height);
+        _milesBarBg.position = CGPointMake(0, _contentNode.size.height+1);
+        _milesLabel.position = CGPointMake(_contentNode.size.width-5, _mileNumLabel.position.y);
+        _mileNumLabel.position = CGPointMake(_contentNode.size.width*0.5, _contentNode.size.height-17.5);
+        
+        if ([_gameMode isEqualToString:@"black_hole"])
+        {
+            [_blackHoleProgressBar resizeWithScreenSize:_contentNode.size];
+            _blackHoleLabel.position = CGPointMake(_backgroundLayer.size.width/4,45);
+            
+        }
+    }
+    if(_paused)
+    {
+        _pauseMenu.position = CGPointMake(30, _contentNode.size.height-35);
+        _pauseMenu.size = CGSizeMake(_backgroundLayer.size.width, _contentNode.size.height-35);
+        _resumeButton.position = CGPointMake(_backgroundLayer.size.width*0.5, -(_contentNode.size.height-35)*0.57);
+        _mainMenuButton.position = CGPointMake(_backgroundLayer.size.width*0.5, -(_contentNode.size.height-35)*0.68);
+        _recordLabel.position = CGPointMake(_backgroundLayer.size.width*0.5, -(_contentNode.size.height-35)*0.80);
+        _recordNumLabel.position = CGPointMake(_backgroundLayer.size.width*0.5, -(_contentNode.size.height-35)*0.80 - 20);
+        _deadShips.position = CGPointMake(_backgroundLayer.size.width*0.5, -(_contentNode.size.height-35)*0.4);
+        _aliveShips.position = CGPointMake(_backgroundLayer.size.width*0.5, -(_contentNode.size.height-35)*0.22);
+        _blackHoleMenuTrail.size = CGSizeMake(92, _contentNode.size.height*0.48);
+        _blackHoleMenuTrail.position = _aliveShips.position;
+        
+    }
+    if(_mainShip._dead)
+    {
+        CGPoint shipPosToTopLeftVector = CGPointSubtract(CGPointMake(0, _contentNode.size.height), CGPointMake(_mainShip.position.x + 32, _backgroundLayer.position.y + _mainShip.position.y));
+        _deadMenu.size = CGSizeMake(_contentNode.size.width, _contentNode.size.height);
+        _deadMenu.anchorPoint = CGPointMake((_mainShip.position.x+32)/_contentNode.size.width, (_backgroundLayer.position.y + _mainShip.position.y)/_contentNode.size.height);
+        _deadMenu.position = CGPointMake(_mainShip.position.x + 32, _backgroundLayer.position.y + _mainShip.position.y);
+        _mainMenuButton.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(_contentNode.size.width*0.5, -(_contentNode.size.height)*0.83));
+        _mainMenuButton.size = CGSizeMake(_contentNode.size.width*0.6, 0.25*_contentNode.size.width*0.6);
+        _recordLabel.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(_contentNode.size.width*0.5, -(_contentNode.size.height)*0.52));
+        _mainMenuButton.size = CGSizeMake(_contentNode.size.width*0.6, 0.25*_contentNode.size.width*0.6);
+        _recordLabel.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(_contentNode.size.width*0.5, -(_contentNode.size.height)*0.52));
+        _recordNumLabel.position = CGPointAdd(shipPosToTopLeftVector,CGPointMake(_contentNode.size.width*0.5, -(_contentNode.size.height)*0.52 - 10));
+        _mileNumLabel.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(_contentNode.size.width*0.5, -(_contentNode.size.height)*0.35 - 10));
+        if(_newHighScore)
+        {
+            _recordLabel.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(_contentNode.size.width*0.5, -(_contentNode.size.height)*0.5));
+        }
+        if ([_gameMode isEqualToString:@"black_hole"])
+        {
+            
+            _deadShips.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(_contentNode.size.width*0.5, -(_contentNode.size.height)*0.68));
+            _aliveShips.position = CGPointAdd(shipPosToTopLeftVector, CGPointMake(_contentNode.size.width*0.5, -(_contentNode.size.height)*0.2));
+            _blackHoleMenuTrail.size = CGSizeMake(92, _contentNode.size.height*0.63);
+            _blackHoleMenuTrail.position = _aliveShips.position;
+        }
+    }
+    
 }
 @end
