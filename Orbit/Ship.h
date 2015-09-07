@@ -7,21 +7,31 @@
 //
 
 #import <SpriteKit/SpriteKit.h>
-#import "Plannet.h"
+#import "Planet.h"
 
 @interface Ship : SKSpriteNode
 
 @property CGFloat _speed;
 @property CGPoint _direction;
 @property CGFloat _miles;
-@property Plannet* _currentPlannet;
-@property CGFloat _oldPlannetToShipAngle;
-@property float _plannetToShipAngle;
-@property CGPoint _lastOrbitPosition;
+@property Planet* _currentPlanet;
+@property CGFloat _oldPlanetToShipAngle;
+@property float _planetToShipAngle;
 @property BOOL _clockwise;
-@property BOOL _onPlannet;
+@property BOOL _inOrbit;
+@property int _place;
 @property BOOL _dead;
+@property float _entrancePathLength;
+@property CGPoint _newPos;
+@property CGPoint _oldPos;
+@property float _releaseAngle;
+@property int _clockwiseInt;
+@property float _accuracyAngle;
+@property BOOL _inGravZone;
+@property BOOL _hasEntered;
+@property SKSpriteNode *_glow;
 
--(instancetype) initWithPosition:(CGPoint) position andColor:(SKColor *) color;
+-(instancetype) initWithPosition:(CGPoint) position andSize:(CGSize)size andImage:(NSString *)imageName;
+
 
 @end

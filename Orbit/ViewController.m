@@ -9,27 +9,31 @@
 #import "ViewController.h"
 #import "MyScene.h"
 
+
 @implementation ViewController
 {
-    SKView *_skView;
-    SKScene *_scene;
+    MyScene *_scene;
 }
+
+@synthesize _skView;
 
 - (void)viewWillLayoutSubviews
 {
     [super viewWillLayoutSubviews];
-
+    
+    self.interstitialPresentationPolicy = ADInterstitialPresentationPolicyManual;
+    
     // Configure the view.
     if(!_skView){
     _skView = (SKView *)self.view;
-    _skView.showsFPS = YES;
-    _skView.showsNodeCount = YES;
-    _skView.showsPhysics = YES;
+    //_skView.showsFPS = YES;
+    //_skView.showsNodeCount = YES;
+    //_skView.showsPhysics = YES;
 
     // Create and configure the scene.
     _scene = [MyScene sceneWithSize:_skView.bounds.size];
     _scene.scaleMode = SKSceneScaleModeAspectFill;
-    
+        
     // Present the scene.
     [_skView presentScene:_scene];
     }
@@ -56,4 +60,5 @@
 }
 
 -(BOOL)prefersStatusBarHidden{ return YES; }
+
 @end

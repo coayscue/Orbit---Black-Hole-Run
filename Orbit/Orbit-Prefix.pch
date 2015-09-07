@@ -17,6 +17,8 @@
 
 typedef NS_OPTIONS(uint32_t, CNPhysicsCategory){
     CNPhysicsCategoryShip = 1 << 0,
-    CNPhysicsCategoryPlannetBody = 1 << 1,
-    CNPhysicsCategoryGravityZone = 1 << 2,
+    CNPhysicsCategoryMainshipGravityZone = 1 << 1,
+    CNPhysicsCategoryOthershipGravityZone = 1 << 2,
+    CNPhysicsCategoryAsteroid = 1 << 3,
+    CNPhysicsCategoryPlanetBody = 1 << 4,
 };

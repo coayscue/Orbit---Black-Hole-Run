@@ -7,7 +7,11 @@
 //
 
 #import <SpriteKit/SpriteKit.h>
+#import "ViewController.h"
 
-@interface MyScene : SKScene
+@interface MyScene : SKScene <ADBannerViewDelegate> 
+
+-(void) pauseScene;
+-(void) unpauseScene;
 
 @end

@@ -7,7 +7,28 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		CAA8132619955705008850FA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CAA8132519955705008850FA /* Foundation.framework */; };
+		CA1297AB1A79E694000F1C22 /* images.atlas in Resources */ = {isa = PBXBuildFile; fileRef = CA1297AA1A79E694000F1C22 /* images.atlas */; };
+		CA1518F619BF9DBA008565BA /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA1518F519BF9DBA008565BA /* StoreKit.framework */; };
+		CA15EFD819B62719007DF6B4 /* Hemi Head.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CA15EFD719B62719007DF6B4 /* Hemi Head.ttf */; };
+		CA15EFDA19B62F49007DF6B4 /* celticmd.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CA15EFD919B62F49007DF6B4 /* celticmd.ttf */; };
+		CA1F300019C09F6100B2ACA4 /* InstructionsScene.m in Sources */ = {isa = PBXBuildFile; fileRef = CA1F2FFF19C09F6100B2ACA4 /* InstructionsScene.m */; };
+		CA323BF519C39BFB00640DEB /* ExtendedThumb.m in Sources */ = {isa = PBXBuildFile; fileRef = CA323BF419C39BFB00640DEB /* ExtendedThumb.m */; };
+		CA323BFC19C3BE7200640DEB /* bad_entrance.mov in Resources */ = {isa = PBXBuildFile; fileRef = CA323BF719C3BE7200640DEB /* bad_entrance.mov */; };
+		CA323BFD19C3BE7200640DEB /* entrance_instruction.mov in Resources */ = {isa = PBXBuildFile; fileRef = CA323BF819C3BE7200640DEB /* entrance_instruction.mov */; };
+		CA323BFE19C3BE7200640DEB /* good_entrance_instruction.mov in Resources */ = {isa = PBXBuildFile; fileRef = CA323BF919C3BE7200640DEB /* good_entrance_instruction.mov */; };
+		CA323BFF19C3BE7200640DEB /* release_instruction.mov in Resources */ = {isa = PBXBuildFile; fileRef = CA323BFA19C3BE7200640DEB /* release_instruction.mov */; };
+		CA323C0019C3BE7200640DEB /* run_instruction.mov in Resources */ = {isa = PBXBuildFile; fileRef = CA323BFB19C3BE7200640DEB /* run_instruction.mov */; };
+		CA6DC00C19C535F400452517 /* orbit_bg_music.m4a in Resources */ = {isa = PBXBuildFile; fileRef = CA6DC00B19C535F400452517 /* orbit_bg_music.m4a */; };
+		CA6DC01719C66EB700452517 /* black_hole_suck.m4a in Resources */ = {isa = PBXBuildFile; fileRef = CA6DC01019C66EB700452517 /* black_hole_suck.m4a */; };
+		CA6DC01819C66EB700452517 /* explosion.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = CA6DC01119C66EB700452517 /* explosion.mp3 */; };
+		CA6DC01919C66EB700452517 /* new_record_beep.m4a in Resources */ = {isa = PBXBuildFile; fileRef = CA6DC01219C66EB700452517 /* new_record_beep.m4a */; };
+		CA6DC01A19C66EB700452517 /* next_mile_beep.m4a in Resources */ = {isa = PBXBuildFile; fileRef = CA6DC01319C66EB700452517 /* next_mile_beep.m4a */; };
+		CA6DC01B19C66EB700452517 /* transport_beam.m4a in Resources */ = {isa = PBXBuildFile; fileRef = CA6DC01419C66EB700452517 /* transport_beam.m4a */; };
+		CA6DC02319C67B9500452517 /* in_orbit.m4a in Resources */ = {isa = PBXBuildFile; fileRef = CA6DC02219C67B9500452517 /* in_orbit.m4a */; };
+		CA812982199AADE90005D6B4 /* Fire.sks in Resources */ = {isa = PBXBuildFile; fileRef = CA812981199AADE90005D6B4 /* Fire.sks */; };
+		CA812988199ABABB0005D6B4 /* Explosion.sks in Resources */ = {isa = PBXBuildFile; fileRef = CA812987199ABABB0005D6B4 /* Explosion.sks */; };
+		CA8129DD19A540A80005D6B4 /* RaceProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = CA8129DC19A540A80005D6B4 /* RaceProgressBar.m */; };
+		CAA8132619955705008850FA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CAA8132519955705008850FA /* Foundation.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		CAA8132819955705008850FA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CAA8132719955705008850FA /* CoreGraphics.framework */; };
 		CAA8132A19955705008850FA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CAA8132919955705008850FA /* UIKit.framework */; };
 		CAA8132C19955705008850FA /* SpriteKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CAA8132B19955705008850FA /* SpriteKit.framework */; };
@@ -24,10 +45,7 @@
 		CAA8135119955705008850FA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CAA8132919955705008850FA /* UIKit.framework */; };
 		CAA8135919955705008850FA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CAA8135719955705008850FA /* InfoPlist.strings */; };
 		CAA8135B19955705008850FA /* OrbitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CAA8135A19955705008850FA /* OrbitTests.m */; };
-		CAA8136E199559AD008850FA /* Background.m in Sources */ = {isa = PBXBuildFile; fileRef = CAA8136D199559AD008850FA /* Background.m */; };
-		CAA81370199559BB008850FA /* background.jpg in Resources */ = {isa = PBXBuildFile; fileRef = CAA8136F199559BB008850FA /* background.jpg */; };
-		CAA8137419955AFB008850FA /* Plannet.m in Sources */ = {isa = PBXBuildFile; fileRef = CAA8137319955AFB008850FA /* Plannet.m */; };
-		CAA8138619957991008850FA /* plannet.png in Resources */ = {isa = PBXBuildFile; fileRef = CAA8138519957991008850FA /* plannet.png */; };
+		CAA8137419955AFB008850FA /* Planet.m in Sources */ = {isa = PBXBuildFile; fileRef = CAA8137319955AFB008850FA /* Planet.m */; };
 		CAA8139019958A65008850FA /* SKTEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = CAA8138D19958A65008850FA /* SKTEffects.m */; };
 		CAA8139119958A65008850FA /* SKTTimingFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = CAA8138F19958A65008850FA /* SKTTimingFunctions.m */; };
 		CAA8139D19958ED1008850FA /* SKAction+SKTExtras.m in Sources */ = {isa = PBXBuildFile; fileRef = CAA8139419958ED1008850FA /* SKAction+SKTExtras.m */; };
@@ -35,11 +53,11 @@
 		CAA8139F19958ED1008850FA /* SKNode+SKTExtras.m in Sources */ = {isa = PBXBuildFile; fileRef = CAA8139819958ED1008850FA /* SKNode+SKTExtras.m */; };
 		CAA813A019958ED1008850FA /* SKTAudio.m in Sources */ = {isa = PBXBuildFile; fileRef = CAA8139A19958ED1008850FA /* SKTAudio.m */; };
 		CAA813A119958ED1008850FA /* SKTUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = CAA8139C19958ED1008850FA /* SKTUtils.mm */; };
-		CAA813A319959A2F008850FA /* Earth.png in Resources */ = {isa = PBXBuildFile; fileRef = CAA813A219959A2F008850FA /* Earth.png */; };
-		CAA813A519959C04008850FA /* rocketship.png in Resources */ = {isa = PBXBuildFile; fileRef = CAA813A419959C04008850FA /* rocketship.png */; };
 		CAA813A819959C40008850FA /* Ship.m in Sources */ = {isa = PBXBuildFile; fileRef = CAA813A719959C40008850FA /* Ship.m */; };
 		CAA813AC1996B448008850FA /* Earth Kid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CAA813AB1996B448008850FA /* Earth Kid.ttf */; };
-		CAA813B019998E24008850FA /* gravzone.png in Resources */ = {isa = PBXBuildFile; fileRef = CAA813AF19998E24008850FA /* gravzone.png */; };
+		CAB6728D19AFB62B0095BD94 /* BlackHoleProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = CAB6728C19AFB62B0095BD94 /* BlackHoleProgressBar.m */; };
+		CAC1004919B67C4A00D48888 /* RoyalInitialen.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CAC1004819B67C4A00D48888 /* RoyalInitialen.ttf */; };
+		CAED7C6919BA0E2B00C72B38 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CAED7C6819BA0E2B00C72B38 /* iAd.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +71,30 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		CA1297AA1A79E694000F1C22 /* images.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = images.atlas; sourceTree = "<group>"; };
+		CA1518F519BF9DBA008565BA /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		CA15EFD719B62719007DF6B4 /* Hemi Head.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Hemi Head.ttf"; sourceTree = "<group>"; };
+		CA15EFD919B62F49007DF6B4 /* celticmd.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = celticmd.ttf; sourceTree = "<group>"; };
+		CA1F2FFE19C09F6100B2ACA4 /* InstructionsScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InstructionsScene.h; sourceTree = "<group>"; };
+		CA1F2FFF19C09F6100B2ACA4 /* InstructionsScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InstructionsScene.m; sourceTree = "<group>"; };
+		CA323BF319C39BFB00640DEB /* ExtendedThumb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExtendedThumb.h; sourceTree = "<group>"; };
+		CA323BF419C39BFB00640DEB /* ExtendedThumb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExtendedThumb.m; sourceTree = "<group>"; };
+		CA323BF719C3BE7200640DEB /* bad_entrance.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = bad_entrance.mov; sourceTree = "<group>"; };
+		CA323BF819C3BE7200640DEB /* entrance_instruction.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = entrance_instruction.mov; sourceTree = "<group>"; };
+		CA323BF919C3BE7200640DEB /* good_entrance_instruction.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = good_entrance_instruction.mov; sourceTree = "<group>"; };
+		CA323BFA19C3BE7200640DEB /* release_instruction.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = release_instruction.mov; sourceTree = "<group>"; };
+		CA323BFB19C3BE7200640DEB /* run_instruction.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = run_instruction.mov; sourceTree = "<group>"; };
+		CA6DC00B19C535F400452517 /* orbit_bg_music.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = orbit_bg_music.m4a; sourceTree = "<group>"; };
+		CA6DC01019C66EB700452517 /* black_hole_suck.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = black_hole_suck.m4a; sourceTree = "<group>"; };
+		CA6DC01119C66EB700452517 /* explosion.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = explosion.mp3; sourceTree = "<group>"; };
+		CA6DC01219C66EB700452517 /* new_record_beep.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = new_record_beep.m4a; sourceTree = "<group>"; };
+		CA6DC01319C66EB700452517 /* next_mile_beep.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = next_mile_beep.m4a; sourceTree = "<group>"; };
+		CA6DC01419C66EB700452517 /* transport_beam.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = transport_beam.m4a; sourceTree = "<group>"; };
+		CA6DC02219C67B9500452517 /* in_orbit.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = in_orbit.m4a; sourceTree = "<group>"; };
+		CA812981199AADE90005D6B4 /* Fire.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Fire.sks; sourceTree = "<group>"; };
+		CA812987199ABABB0005D6B4 /* Explosion.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Explosion.sks; sourceTree = "<group>"; };
+		CA8129DB19A540A80005D6B4 /* RaceProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RaceProgressBar.h; sourceTree = "<group>"; };
+		CA8129DC19A540A80005D6B4 /* RaceProgressBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RaceProgressBar.m; sourceTree = "<group>"; };
 		CAA8132219955705008850FA /* Orbit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Orbit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CAA8132519955705008850FA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		CAA8132719955705008850FA /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -76,12 +118,8 @@
 		CAA8135619955705008850FA /* OrbitTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "OrbitTests-Info.plist"; sourceTree = "<group>"; };
 		CAA8135819955705008850FA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		CAA8135A19955705008850FA /* OrbitTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OrbitTests.m; sourceTree = "<group>"; };
-		CAA8136C199559AD008850FA /* Background.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Background.h; sourceTree = "<group>"; };
-		CAA8136D199559AD008850FA /* Background.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Background.m; sourceTree = "<group>"; };
-		CAA8136F199559BB008850FA /* background.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = background.jpg; sourceTree = "<group>"; };
-		CAA8137219955AFB008850FA /* Plannet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Plannet.h; sourceTree = "<group>"; };
-		CAA8137319955AFB008850FA /* Plannet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Plannet.m; sourceTree = "<group>"; };
-		CAA8138519957991008850FA /* plannet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = plannet.png; sourceTree = "<group>"; };
+		CAA8137219955AFB008850FA /* Planet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Planet.h; sourceTree = "<group>"; };
+		CAA8137319955AFB008850FA /* Planet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Planet.m; sourceTree = "<group>"; };
 		CAA8138C19958A65008850FA /* SKTEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SKTEffects.h; path = "../Extra Source Code/SKTEffects.h"; sourceTree = "<group>"; };
 		CAA8138D19958A65008850FA /* SKTEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SKTEffects.m; path = "../Extra Source Code/SKTEffects.m"; sourceTree = "<group>"; };
 		CAA8138E19958A65008850FA /* SKTTimingFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SKTTimingFunctions.h; path = "../Extra Source Code/SKTTimingFunctions.h"; sourceTree = "<group>"; };
@@ -96,12 +134,14 @@
 		CAA8139A19958ED1008850FA /* SKTAudio.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKTAudio.m; sourceTree = "<group>"; };
 		CAA8139B19958ED1008850FA /* SKTUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKTUtils.h; sourceTree = "<group>"; };
 		CAA8139C19958ED1008850FA /* SKTUtils.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SKTUtils.mm; sourceTree = "<group>"; };
-		CAA813A219959A2F008850FA /* Earth.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Earth.png; sourceTree = "<group>"; };
-		CAA813A419959C04008850FA /* rocketship.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rocketship.png; sourceTree = "<group>"; };
 		CAA813A619959C40008850FA /* Ship.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Ship.h; sourceTree = "<group>"; };
 		CAA813A719959C40008850FA /* Ship.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Ship.m; sourceTree = "<group>"; };
 		CAA813AB1996B448008850FA /* Earth Kid.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Earth Kid.ttf"; sourceTree = "<group>"; };
-		CAA813AF19998E24008850FA /* gravzone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gravzone.png; sourceTree = "<group>"; };
+		CAB6728B19AFB62B0095BD94 /* BlackHoleProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlackHoleProgressBar.h; sourceTree = "<group>"; };
+		CAB6728C19AFB62B0095BD94 /* BlackHoleProgressBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlackHoleProgressBar.m; sourceTree = "<group>"; };
+		CAC1004819B67C4A00D48888 /* RoyalInitialen.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = RoyalInitialen.ttf; sourceTree = "<group>"; };
+		CAED7C6819BA0E2B00C72B38 /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
+		CAF4A47119A5595C005E8676 /* Earth Kid.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Earth Kid.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,8 +149,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CAED7C6919BA0E2B00C72B38 /* iAd.framework in Frameworks */,
 				CAA8132819955705008850FA /* CoreGraphics.framework in Frameworks */,
 				CAA8132A19955705008850FA /* UIKit.framework in Frameworks */,
+				CA1518F619BF9DBA008565BA /* StoreKit.framework in Frameworks */,
 				CAA8132C19955705008850FA /* SpriteKit.framework in Frameworks */,
 				CAA8132619955705008850FA /* Foundation.framework in Frameworks */,
 			);
@@ -129,6 +171,32 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CA323BF619C3BE7200640DEB /* instruction_videos */ = {
+			isa = PBXGroup;
+			children = (
+				CA323BF719C3BE7200640DEB /* bad_entrance.mov */,
+				CA323BF819C3BE7200640DEB /* entrance_instruction.mov */,
+				CA323BF919C3BE7200640DEB /* good_entrance_instruction.mov */,
+				CA323BFA19C3BE7200640DEB /* release_instruction.mov */,
+				CA323BFB19C3BE7200640DEB /* run_instruction.mov */,
+			);
+			path = instruction_videos;
+			sourceTree = "<group>";
+		};
+		CA6DC00D19C66EA800452517 /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				CA6DC02219C67B9500452517 /* in_orbit.m4a */,
+				CA6DC01019C66EB700452517 /* black_hole_suck.m4a */,
+				CA6DC01119C66EB700452517 /* explosion.mp3 */,
+				CA6DC01219C66EB700452517 /* new_record_beep.m4a */,
+				CA6DC01319C66EB700452517 /* next_mile_beep.m4a */,
+				CA6DC01419C66EB700452517 /* transport_beam.m4a */,
+				CA6DC00B19C535F400452517 /* orbit_bg_music.m4a */,
+			);
+			name = Sounds;
+			sourceTree = "<group>";
+		};
 		CAA8131919955705008850FA = {
 			isa = PBXGroup;
 			children = (
@@ -151,6 +219,8 @@
 		CAA8132419955705008850FA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CA1518F519BF9DBA008565BA /* StoreKit.framework */,
+				CAED7C6819BA0E2B00C72B38 /* iAd.framework */,
 				CAA8132519955705008850FA /* Foundation.framework */,
 				CAA8132719955705008850FA /* CoreGraphics.framework */,
 				CAA8132919955705008850FA /* UIKit.framework */,
@@ -171,12 +241,20 @@
 				CAA8134019955705008850FA /* ViewController.m */,
 				CAA8134219955705008850FA /* MyScene.h */,
 				CAA8134319955705008850FA /* MyScene.m */,
-				CAA8136C199559AD008850FA /* Background.h */,
-				CAA8136D199559AD008850FA /* Background.m */,
-				CAA8137219955AFB008850FA /* Plannet.h */,
-				CAA8137319955AFB008850FA /* Plannet.m */,
+				CA323BF319C39BFB00640DEB /* ExtendedThumb.h */,
+				CA323BF419C39BFB00640DEB /* ExtendedThumb.m */,
+				CAB6728B19AFB62B0095BD94 /* BlackHoleProgressBar.h */,
+				CAB6728C19AFB62B0095BD94 /* BlackHoleProgressBar.m */,
+				CA8129DB19A540A80005D6B4 /* RaceProgressBar.h */,
+				CA8129DC19A540A80005D6B4 /* RaceProgressBar.m */,
+				CAA8137219955AFB008850FA /* Planet.h */,
+				CAA8137319955AFB008850FA /* Planet.m */,
 				CAA813A619959C40008850FA /* Ship.h */,
 				CAA813A719959C40008850FA /* Ship.m */,
+				CA1F2FFE19C09F6100B2ACA4 /* InstructionsScene.h */,
+				CA1F2FFF19C09F6100B2ACA4 /* InstructionsScene.m */,
+				CA812987199ABABB0005D6B4 /* Explosion.sks */,
+				CA812981199AADE90005D6B4 /* Fire.sks */,
 				CAA8134719955705008850FA /* Images.xcassets */,
 				CAA813A91996B420008850FA /* Resources */,
 				CAA8139219958ED1008850FA /* SKTUtils */,
@@ -218,11 +296,8 @@
 		CAA81371199559C0008850FA /* Art */ = {
 			isa = PBXGroup;
 			children = (
-				CAA813A419959C04008850FA /* rocketship.png */,
-				CAA813AF19998E24008850FA /* gravzone.png */,
-				CAA813A219959A2F008850FA /* Earth.png */,
-				CAA8138519957991008850FA /* plannet.png */,
-				CAA8136F199559BB008850FA /* background.jpg */,
+				CA323BF619C3BE7200640DEB /* instruction_videos */,
+				CAF4A47019A55952005E8676 /* Fonts */,
 			);
 			name = Art;
 			sourceTree = "<group>";
@@ -251,6 +326,8 @@
 		CAA813A91996B420008850FA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				CA1297AA1A79E694000F1C22 /* images.atlas */,
+				CA6DC00D19C66EA800452517 /* Sounds */,
 				CAA813AA1996B42E008850FA /* Fonts */,
 			);
 			name = Resources;
@@ -260,6 +337,17 @@
 			isa = PBXGroup;
 			children = (
 				CAA813AB1996B448008850FA /* Earth Kid.ttf */,
+			);
+			name = Fonts;
+			sourceTree = "<group>";
+		};
+		CAF4A47019A55952005E8676 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				CAC1004819B67C4A00D48888 /* RoyalInitialen.ttf */,
+				CA15EFD919B62F49007DF6B4 /* celticmd.ttf */,
+				CA15EFD719B62719007DF6B4 /* Hemi Head.ttf */,
+				CAF4A47119A5595C005E8676 /* Earth Kid.ttf */,
 			);
 			name = Fonts;
 			sourceTree = "<group>";
@@ -308,9 +396,17 @@
 		CAA8131A19955705008850FA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0510;
+				LastUpgradeCheck = 0600;
 				ORGANIZATIONNAME = coayscue;
 				TargetAttributes = {
+					CAA8132119955705008850FA = {
+						DevelopmentTeam = JUXS6F9TT2;
+						SystemCapabilities = {
+							com.apple.InAppPurchase = {
+								enabled = 1;
+							};
+						};
+					};
 					CAA8134C19955705008850FA = {
 						TestTargetID = CAA8132119955705008850FA;
 					};
@@ -340,16 +436,29 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CAA8138619957991008850FA /* plannet.png in Resources */,
 				CAA8134819955705008850FA /* Images.xcassets in Resources */,
-				CAA81370199559BB008850FA /* background.jpg in Resources */,
 				CAA813AC1996B448008850FA /* Earth Kid.ttf in Resources */,
+				CA1297AB1A79E694000F1C22 /* images.atlas in Resources */,
 				CAA8133E19955705008850FA /* Main_iPad.storyboard in Resources */,
-				CAA813B019998E24008850FA /* gravzone.png in Resources */,
+				CA15EFDA19B62F49007DF6B4 /* celticmd.ttf in Resources */,
+				CA323BFD19C3BE7200640DEB /* entrance_instruction.mov in Resources */,
+				CA6DC01A19C66EB700452517 /* next_mile_beep.m4a in Resources */,
+				CA812988199ABABB0005D6B4 /* Explosion.sks in Resources */,
+				CA323C0019C3BE7200640DEB /* run_instruction.mov in Resources */,
+				CA6DC00C19C535F400452517 /* orbit_bg_music.m4a in Resources */,
+				CA15EFD819B62719007DF6B4 /* Hemi Head.ttf in Resources */,
+				CA6DC02319C67B9500452517 /* in_orbit.m4a in Resources */,
+				CAC1004919B67C4A00D48888 /* RoyalInitialen.ttf in Resources */,
+				CA323BFF19C3BE7200640DEB /* release_instruction.mov in Resources */,
+				CA812982199AADE90005D6B4 /* Fire.sks in Resources */,
+				CA323BFE19C3BE7200640DEB /* good_entrance_instruction.mov in Resources */,
+				CA6DC01919C66EB700452517 /* new_record_beep.m4a in Resources */,
 				CAA8133B19955705008850FA /* Main_iPhone.storyboard in Resources */,
 				CAA8133219955705008850FA /* InfoPlist.strings in Resources */,
-				CAA813A519959C04008850FA /* rocketship.png in Resources */,
-				CAA813A319959A2F008850FA /* Earth.png in Resources */,
+				CA6DC01B19C66EB700452517 /* transport_beam.m4a in Resources */,
+				CA6DC01819C66EB700452517 /* explosion.mp3 in Resources */,
+				CA6DC01719C66EB700452517 /* black_hole_suck.m4a in Resources */,
+				CA323BFC19C3BE7200640DEB /* bad_entrance.mov in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -368,18 +477,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CAA8137419955AFB008850FA /* Plannet.m in Sources */,
+				CAB6728D19AFB62B0095BD94 /* BlackHoleProgressBar.m in Sources */,
+				CAA8137419955AFB008850FA /* Planet.m in Sources */,
+				CA1F300019C09F6100B2ACA4 /* InstructionsScene.m in Sources */,
 				CAA813A019958ED1008850FA /* SKTAudio.m in Sources */,
+				CA8129DD19A540A80005D6B4 /* RaceProgressBar.m in Sources */,
 				CAA8134419955705008850FA /* MyScene.m in Sources */,
 				CAA8139119958A65008850FA /* SKTTimingFunctions.m in Sources */,
 				CAA8139D19958ED1008850FA /* SKAction+SKTExtras.m in Sources */,
 				CAA813A819959C40008850FA /* Ship.m in Sources */,
+				CA323BF519C39BFB00640DEB /* ExtendedThumb.m in Sources */,
 				CAA813A119958ED1008850FA /* SKTUtils.mm in Sources */,
 				CAA8139019958A65008850FA /* SKTEffects.m in Sources */,
 				CAA8134119955705008850FA /* ViewController.m in Sources */,
 				CAA8133819955705008850FA /* AppDelegate.m in Sources */,
 				CAA8139F19958ED1008850FA /* SKNode+SKTExtras.m in Sources */,
-				CAA8136E199559AD008850FA /* Background.m in Sources */,
 				CAA8139E19958ED1008850FA /* SKEmitterNode+SKTExtras.m in Sources */,
 				CAA8133419955705008850FA /* main.m in Sources */,
 			);
@@ -471,7 +583,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -494,8 +606,10 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
+				DEPLOYMENT_LOCATION = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -504,7 +618,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -516,11 +631,20 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEPLOYMENT_LOCATION = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Orbit/Orbit-Prefix.pch";
 				INFOPLIST_FILE = "Orbit/Orbit-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SPRITEKIT_TEXTURE_ATLAS_OUTPUT = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = NO;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -530,11 +654,21 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				DEPLOYMENT_LOCATION = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Orbit/Orbit-Prefix.pch";
 				INFOPLIST_FILE = "Orbit/Orbit-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SPRITEKIT_TEXTURE_ATLAS_OUTPUT = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -543,6 +677,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Orbit.app/Orbit";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -557,6 +692,7 @@
 				INFOPLIST_FILE = "OrbitTests/OrbitTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
+				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Debug;
@@ -565,6 +701,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Orbit.app/Orbit";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -598,6 +735,7 @@
 				CAA8136019955705008850FA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		CAA8136119955705008850FA /* Build configuration list for PBXNativeTarget "OrbitTests" */ = {
 			isa = XCConfigurationList;
@@ -606,6 +744,7 @@
 				CAA8136319955705008850FA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
